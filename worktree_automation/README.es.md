@@ -34,13 +34,21 @@ Script interactivo para gestionar Git worktrees de forma simple y automatizada.
 ## 📦 Prerequisitos
 
 ### Sistema Operativo
-- macOS (probado)
-- Linux (compatible)
+- **macOS** (probado) - use `wt.sh`
+- **Linux** (compatible) - use `wt.sh`
+- **Windows** (PowerShell) - use `wt.ps1`
 
 ### Software Necesario
+
+**Para macOS/Linux:**
 - Git 2.5+
 - Bash 4.0+
 - zsh o bash (shell)
+
+**Para Windows:**
+- Git 2.5+ ([Git para Windows](https://git-scm.com/download/win))
+- PowerShell 5.1+ (incluido en Windows 10/11)
+- PowerShell 7+ (recomendado, descargar de [GitHub](https://github.com/PowerShell/PowerShell))
 
 ### Configuración Inicial
 
@@ -76,7 +84,13 @@ En la primera ejecución, el script solicitará que configure el **directorio de
 
 ## 🚀 Instalación
 
-### Instalación Automática (Recomendado)
+> **Nota:** Elija el método de instalación apropiado para su sistema operativo:
+> - **macOS/Linux**: Siga las instrucciones para `wt.sh` (Bash)
+> - **Windows**: Siga las instrucciones para `wt.ps1` (PowerShell)
+
+### Para macOS/Linux (Script Bash)
+
+#### Instalación Automática (Recomendado)
 
 1. **Clone o navegue hasta el directorio del script:**
    ```bash
@@ -113,7 +127,7 @@ En la primera ejecución, el script solicitará que configure el **directorio de
    # Ejemplo: ~/projects  o  ~/workspace/repos
    ```
 
-### Lo que Hace el Instalador
+#### Lo que Hace el Instalador
 
 El script `install.sh` realiza automáticamente:
 
@@ -125,7 +139,7 @@ El script `install.sh` realiza automáticamente:
 6. ✅ Valida la instalación
 7. ✅ Lista proyectos Git disponibles
 
-### Instalación Manual
+#### Instalación Manual
 
 Si prefiere instalar manualmente:
 
@@ -153,6 +167,88 @@ Si prefiere instalar manualmente:
 
 5. **Configure el directorio de trabajo:**
    ```bash
+   wt
+   # En la primera ejecución, configure su directorio de proyectos
+   ```
+
+### Para Windows (Script PowerShell)
+
+#### Instalación Automática (Recomendado)
+
+1. **Clone o navegue hasta el directorio del script:**
+   ```powershell
+   cd C:\ruta\a\worktree_automation
+   ```
+
+2. **Ejecute el instalador en PowerShell:**
+   ```powershell
+   .\install.ps1
+   ```
+
+   > **Nota:** Si recibe un error de política de ejecución, ejecute PowerShell como Administrador y ejecute:
+   > ```powershell
+   > Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+   > ```
+
+3. **Recargue el PowerShell Profile:**
+
+   **Opción A - Recargar en la sesión actual:**
+   ```powershell
+   . $PROFILE
+   ```
+
+   **Opción B - Abrir nueva ventana de PowerShell**
+
+4. **Configure el directorio de trabajo:**
+
+   En la primera ejecución del comando `wt`, se le pedirá configurar el directorio donde se encuentran sus proyectos Git.
+
+   ```powershell
+   wt
+   # Ingrese la ruta completa
+   # Ejemplo: C:\Users\SuNombre\projects  o  D:\workspace\repos
+   ```
+
+#### Lo que Hace el Instalador
+
+El script `install.ps1` realiza automáticamente:
+
+1. ✅ Agrega la función `wt` a su PowerShell Profile
+2. ✅ Valida la instalación de Git
+3. ✅ Crea el PowerShell profile si no existe
+4. ✅ Ofrece opción para recargar el profile inmediatamente
+
+#### Instalación Manual
+
+Si prefiere instalar manualmente:
+
+1. **Abra su PowerShell Profile:**
+   ```powershell
+   notepad $PROFILE
+   ```
+
+   Si el archivo no existe, créelo:
+   ```powershell
+   New-Item -Path $PROFILE -Type File -Force
+   ```
+
+2. **Agregue la siguiente función a su profile:**
+   ```powershell
+   # Git Worktree Manager
+   function wt {
+       & "C:\ruta\a\worktree_automation\wt.ps1" $args
+   }
+   ```
+
+   Reemplace `C:\ruta\a\worktree_automation\wt.ps1` con la ruta real del script.
+
+3. **Recargue el PowerShell Profile:**
+   ```powershell
+   . $PROFILE
+   ```
+
+4. **Configure el directorio de trabajo:**
+   ```powershell
    wt
    # En la primera ejecución, configure su directorio de proyectos
    ```
