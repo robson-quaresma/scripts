@@ -21,15 +21,15 @@ Script interactivo para gestionar Git worktrees de forma simple y automatizada.
 
 ### Funcionalidades
 
-✅ **Creación Interactiva**: Crea worktrees con interfaz guiada
-✅ **Eliminación Segura**: Elimina worktrees con confirmación
-✅ **Listado**: Visualiza todos los worktrees activos
-✅ **Validación Automática**: Garantiza que estás en la rama `main` antes de operar
-✅ **Nomenclatura Inteligente**: Sanitiza nombres automáticamente
-✅ **Configuración Flexible**: Configura directorio de trabajo y agente IA
-✅ **Soporte Multi-Agente**: Claude, Cursor, Gemini, Copilot, Windsurf y más
-✅ **Multi-idioma**: Soporte para Inglés, Portugués (BR) y Español
-✅ **Interfaz Colorida**: Salida visual e intuitiva
+- ✅ **Creación Interactiva**: Crea worktrees con interfaz guiada
+- ✅ **Eliminación Segura**: Elimina worktrees con confirmación
+- ✅ **Listado**: Visualiza todos los worktrees activos
+- ✅ **Validación Automática**: Garantiza que estás en la rama `main` antes de operar
+- ✅ **Nomenclatura Inteligente**: Sanitiza nombres automáticamente
+- ✅ **Configuración Flexible**: Configura directorio de trabajo y agente IA
+- ✅ **Soporte Multi-Agente**: Claude, Cursor, Gemini, Copilot, Windsurf y más
+- ✅ **Multi-idioma**: Soporte para Inglés, Portugués (BR) y Español
+- ✅ **Interfaz Colorida**: Salida visual e intuitiva
 
 ## 📦 Prerequisitos
 
