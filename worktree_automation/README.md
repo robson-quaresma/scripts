@@ -20,11 +20,17 @@ O **Git Worktree Manager** (`wt`) é uma ferramenta que automatiza a criação e
 ### Funcionalidades
 
 ✅ **Criação Interativa**: Cria worktrees com interface guiada
+
 ✅ **Remoção Segura**: Remove worktrees com confirmação
+
 ✅ **Listagem**: Visualiza todos worktrees ativos
+
 ✅ **Validação Automática**: Garante que está na branch `main` antes de operar
+
 ✅ **Nomenclatura Inteligente**: Sanitiza nomes automaticamente
+
 ✅ **Integração Claude**: Abre Claude Code automaticamente após criar worktree
+
 ✅ **Interface Colorida**: Output visual e intuitivo
 
 ## 📦 Pré-requisitos
