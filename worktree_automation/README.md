@@ -1,273 +1,277 @@
 # 🌳 Git Worktree Manager
 
-Script interativo para gerenciar Git worktrees de forma simples e automatizada.
+> **Language / Idioma / Idioma:** [🇺🇸 English](README.md) | [🇧🇷 Português](README.pt-BR.md) | [🇪🇸 Español](README.es.md)
 
-## 📋 Índice
+Interactive script to manage Git worktrees easily and automatically.
 
-- [Sobre](#sobre)
-- [Pré-requisitos](#pré-requisitos)
-- [Estrutura de Diretórios](#estrutura-de-diretórios)
-- [Instalação](#instalação)
-- [Uso](#uso)
-- [Desinstalação](#desinstalação)
+## 📋 Table of Contents
+
+- [About](#about)
+- [Prerequisites](#prerequisites)
+- [Directory Structure](#directory-structure)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Uninstallation](#uninstallation)
 - [Troubleshooting](#troubleshooting)
-- [Replicar em Outros Computadores](#replicar-em-outros-computadores)
+- [Replicate on Other Computers](#replicate-on-other-computers)
 
-## 🎯 Sobre
+## 🎯 About
 
-O **Git Worktree Manager** (`wt`) é uma ferramenta que automatiza a criação e gerenciamento de Git worktrees, permitindo trabalhar em múltiplas branches simultaneamente sem precisar fazer stash ou trocar de branch constantemente.
+**Git Worktree Manager** (`wt`) is a tool that automates the creation and management of Git worktrees, allowing you to work on multiple branches simultaneously without needing to stash or constantly switch branches.
 
-### Funcionalidades
+### Features
 
-✅ **Criação Interativa**: Cria worktrees com interface guiada
-✅ **Remoção Segura**: Remove worktrees com confirmação
-✅ **Listagem**: Visualiza todos worktrees ativos
-✅ **Validação Automática**: Garante que está na branch `main` antes de operar
-✅ **Nomenclatura Inteligente**: Sanitiza nomes automaticamente
-✅ **Configuração Flexível**: Configure diretório de trabalho e agente IA
-✅ **Suporte Multi-Agente**: Claude, Cursor, Gemini, Copilot, Windsurf e mais
-✅ **Interface Colorida**: Output visual e intuitivo
+✅ **Interactive Creation**: Creates worktrees with guided interface
+✅ **Safe Removal**: Removes worktrees with confirmation
+✅ **Listing**: View all active worktrees
+✅ **Automatic Validation**: Ensures you're on the `main` branch before operating
+✅ **Smart Naming**: Automatically sanitizes names
+✅ **Flexible Configuration**: Configure working directory and AI agent
+✅ **Multi-Agent Support**: Claude, Cursor, Gemini, Copilot, Windsurf and more
+✅ **Multi-language**: English, Portuguese (BR), and Spanish support
+✅ **Colored Interface**: Visual and intuitive output
 
-## 📦 Pré-requisitos
+## 📦 Prerequisites
 
-### Sistema Operacional
-- macOS (testado)
-- Linux (compatível)
+### Operating System
+- macOS (tested)
+- Linux (compatible)
 
-### Softwares Necessários
+### Required Software
 - Git 2.5+
 - Bash 4.0+
-- zsh ou bash (shell)
+- zsh or bash (shell)
 
-### Configuração Inicial
+### Initial Setup
 
-Na primeira execução, o script solicitará que você configure o **diretório de trabalho** onde seus projetos Git estão localizados.
+On first execution, the script will ask you to configure the **working directory** where your Git projects are located.
 
-**Estrutura recomendada:**
+**Recommended structure:**
 
 ```
-~/projects/                         # Seu diretório de projetos
-├── projeto1/                       # Repositório Git (branch main)
+~/projects/                         # Your projects directory
+├── project1/                       # Git repository (main branch)
 │   └── .git/
-├── projeto2/                       # Repositório Git (branch main)
+├── project2/                       # Git repository (main branch)
 │   └── .git/
-└── projeto3/                       # Repositório Git (branch main)
+└── project3/                       # Git repository (main branch)
     └── .git/
 ```
 
-**IMPORTANTE:**
-- O diretório pode ser qualquer pasta que contenha seus projetos Git
-- Cada projeto deve ter um repositório Git válido
-- Os worktrees serão criados no mesmo nível dos projetos
-- A configuração é salva em `~/.wt_config` e pode ser alterada a qualquer momento
+**IMPORTANT:**
+- The directory can be any folder containing your Git projects
+- Each project must have a valid Git repository
+- Worktrees will be created at the same level as projects
+- Configuration is saved in `~/.wt_config` and can be changed at any time
 
-**Exemplo após criar worktrees:**
+**Example after creating worktrees:**
 ```
 ~/projects/
-├── myapp/                          # Projeto principal (main)
+├── myapp/                          # Main project (main)
 ├── feat_myapp_user-auth/           # Worktree: feat/user-auth
 ├── fix_myapp_login/                # Worktree: fix/login
 ├── release_myapp_v1.2.0/           # Worktree: release/v1.2.0
 └── refactor_myapp_database/        # Worktree: refactor/database
 ```
 
-## 🚀 Instalação
+## 🚀 Installation
 
-### Instalação Automática (Recomendado)
+### Automatic Installation (Recommended)
 
-1. **Clone ou navegue até o diretório do script:**
+1. **Clone or navigate to the script directory:**
    ```bash
    cd /path/to/worktree_automation
    ```
 
-2. **Execute o instalador:**
+2. **Run the installer:**
    ```bash
    chmod +x install.sh
    ./install.sh
    ```
 
-3. **Ative o script (escolha uma opção):**
+3. **Activate the script (choose one option):**
 
-   **Opção A - Recarregar shell:**
+   **Option A - Reload shell:**
    ```bash
-   source ~/.zshrc    # Para zsh
-   # ou
-   source ~/.bashrc   # Para bash
+   source ~/.zshrc    # For zsh
+   # or
+   source ~/.bashrc   # For bash
    ```
 
-   **Opção B - Abrir novo terminal:**
+   **Option B - Open new terminal:**
    ```bash
-   # Simplesmente abra uma nova janela/aba do terminal
+   # Simply open a new terminal window/tab
    ```
 
-4. **Configure o diretório de trabalho:**
+4. **Configure the working directory:**
 
-   Na primeira execução do comando `wt`, você será solicitado a configurar o diretório onde seus projetos Git estão localizados.
+   On first execution of the `wt` command, you'll be asked to configure the directory where your Git projects are located.
 
    ```bash
    wt
-   # Digite o caminho completo (use Tab para autocomplete)
-   # Exemplo: ~/projects  ou  ~/workspace/repos
+   # Enter the full path (use Tab for autocomplete)
+   # Example: ~/projects  or  ~/workspace/repos
    ```
 
-### O que o Instalador Faz
+### What the Installer Does
 
-O script `install.sh` realiza automaticamente:
+The `install.sh` script automatically:
 
-1. ✅ Cria o diretório `~/bin/` (se não existir)
-2. ✅ Cria link simbólico: `~/bin/wt` → `wt.sh`
-3. ✅ Adiciona `~/bin` ao PATH
-4. ✅ Cria alias `wt` no shell config
-5. ✅ Configura `.zshrc`, `.bashrc` ou `.bash_profile`
-6. ✅ Valida a instalação
-7. ✅ Lista projetos Git disponíveis
+1. ✅ Creates `~/bin/` directory (if it doesn't exist)
+2. ✅ Creates symbolic link: `~/bin/wt` → `wt.sh`
+3. ✅ Adds `~/bin` to PATH
+4. ✅ Creates `wt` alias in shell config
+5. ✅ Configures `.zshrc`, `.bashrc` or `.bash_profile`
+6. ✅ Validates the installation
+7. ✅ Lists available Git projects
 
-### Instalação Manual
+### Manual Installation
 
-Se preferir instalar manualmente:
+If you prefer to install manually:
 
-1. **Criar diretório ~/bin:**
+1. **Create ~/bin directory:**
    ```bash
    mkdir -p ~/bin
    ```
 
-2. **Criar link simbólico:**
+2. **Create symbolic link:**
    ```bash
    ln -s /path/to/worktree_automation/wt.sh ~/bin/wt
    chmod +x /path/to/worktree_automation/wt.sh
    ```
 
-3. **Adicionar ao shell config (.zshrc ou .bashrc):**
+3. **Add to shell config (.zshrc or .bashrc):**
    ```bash
    echo 'export PATH="$HOME/bin:$PATH"' >> ~/.zshrc
    echo 'alias wt="$HOME/bin/wt"' >> ~/.zshrc
    ```
 
-4. **Recarregar shell:**
+4. **Reload shell:**
    ```bash
    source ~/.zshrc
    ```
 
-5. **Configure o diretório de trabalho:**
+5. **Configure working directory:**
    ```bash
    wt
-   # Na primeira execução, configure seu diretório de projetos
+   # On first run, configure your projects directory
    ```
 
-## 💻 Uso
+## 💻 Usage
 
-### Sintaxe
+### Syntax
 
 ```bash
-wt [projeto] [operação]
+wt [project] [operation]
 ```
 
-### Modos de Uso
+### Usage Modes
 
-#### 1️⃣ Modo Totalmente Interativo (Recomendado)
+#### 1️⃣ Fully Interactive Mode (Recommended)
 
 ```bash
 wt
 ```
 
-O script irá:
-1. Listar todos os projetos Git disponíveis (menu numérico)
-2. Solicitar que escolha o número do projeto
-3. Validar o projeto selecionado
-4. Mostrar menu de opções (criar/remover/listar)
+The script will:
+1. List all available Git projects (numeric menu)
+2. Ask you to choose the project number
+3. Validate the selected project
+4. Show options menu (create/remove/list)
 
-**Exemplo:**
+**Example:**
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     🌳 Git Worktree Manager
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📁 Projetos disponíveis:
+📁 Available projects:
 
   1) project-a
   2) myapp
   3) website
 
-Escolha o número do projeto (ou 'q' para sair): 2
+Choose the project number (or 'q' to quit): 2
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     🌳 Git Worktree Manager
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-ℹ️  Projeto: myapp
-ℹ️  Diretório: ~/projects/myapp
+ℹ️  Project: myapp
+ℹ️  Directory: ~/projects/myapp
 
-✅ Na branch main ✓
+✅ On branch main ✓
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     🌳 Git Worktree Manager
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  1) Criar novo worktree
-  2) Remover worktree existente
-  3) Listar worktrees
-  4) Configurar diretório de trabalho
-  5) Configurar agente IA
-  6) Sair
+  1) Create new worktree
+  2) Remove existing worktree
+  3) List worktrees
+  4) Configure working directory
+  5) Configure AI agent
+  6) Change language
+  7) Exit
 
-📂 Diretório atual: ~/projects
-🤖 Agente: claude (fixo)
+📂 Current directory: ~/projects
+🤖 Agent: claude (fixed)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Escolha uma opção: _
+Choose an option: _
 ```
 
-#### 2️⃣ Modo Interativo com Projeto
+#### 2️⃣ Interactive Mode with Project
 
 ```bash
 wt myapp
 ```
 
-Especifica o projeto e mostra o menu de operações.
+Specifies the project and shows the operations menu.
 
-#### 3️⃣ Modo Direto
+#### 3️⃣ Direct Mode
 
 ```bash
-# Criar worktree
-wt myapp criar
+# Create worktree
+wt myapp create
 
-# Remover worktree
-wt myapp remover
+# Remove worktree
+wt myapp remove
 
-# Listar worktrees
-wt myapp listar
+# List worktrees
+wt myapp list
 ```
 
-### Criar Worktree
+### Create Worktree
 
-1. **Escolha o tipo:**
-   - `1` para `feat` (feature)
-   - `2` para `fix` (bugfix)
-   - `3` para `release`
-   - `4` para `refactor`
-   - `5` para `Outro (customizado)` - permite digitar qualquer prefixo
+1. **Choose the type:**
+   - `1` for `feat` (feature)
+   - `2` for `fix` (bugfix)
+   - `3` for `release`
+   - `4` for `refactor`
+   - `5` for `Other (custom)` - allows typing any prefix
 
-2. **Digite o nome:**
-   - Exemplo: `user authentication`
-   - Será convertido para: `user-authentication`
+2. **Enter the name:**
+   - Example: `user authentication`
+   - Will be converted to: `user-authentication`
 
-3. **Confirme a criação**
+3. **Confirm creation**
 
-**Resultado (exemplo com projeto "myapp" e tipo "feat"):**
-- Branch criada: `feat/user-authentication`
-- Diretório: `~/projects/feat_myapp_user-authentication`
-- Navegação automática para o worktree
-- Claude Code aberto automaticamente (se instalado)
+**Result (example with "myapp" project and "feat" type):**
+- Branch created: `feat/user-authentication`
+- Directory: `~/projects/feat_myapp_user-authentication`
+- Automatic navigation to worktree
+- AI agent opened automatically (if configured)
 
-**Padrão de nomenclatura:**
+**Naming pattern:**
 ```
-Diretório: {tipo}_{projeto}_{feature-name}
-Branch: {tipo}/{feature-name}
+Directory: {type}_{project}_{feature-name}
+Branch: {type}/{feature-name}
 ```
 
-**Exemplos:**
-| Projeto | Tipo | Feature | Branch | Diretório |
+**Examples:**
+| Project | Type | Feature | Branch | Directory |
 |---------|------|---------|--------|-----------|
 | myapp | feat | user-auth | `feat/user-auth` | `feat_myapp_user-auth/` |
 | myapp | fix | login-bug | `fix/login-bug` | `fix_myapp_login-bug/` |
@@ -275,369 +279,386 @@ Branch: {tipo}/{feature-name}
 | myapp | refactor | database | `refactor/database` | `refactor_myapp_database/` |
 | myapp | chore | cleanup | `chore/cleanup` | `chore_myapp_cleanup/` |
 
-### Remover Worktree
+### Remove Worktree
 
-1. Lista todos os worktrees existentes (exceto main)
-2. Escolha o número do worktree para remover
-3. Confirme a remoção
+1. Lists all existing worktrees (except main)
+2. Choose the worktree number to remove
+3. Confirm removal
 
-**Segurança:**
-- Solicita confirmação antes de remover
-- Remove com `--force` para garantir limpeza completa
+**Safety:**
+- Asks for confirmation before removing
+- Removes with `--force` to ensure complete cleanup
 
-### Listar Worktrees
+### List Worktrees
 
-Exibe todos os worktrees ativos com:
-- Caminho completo
-- Branch associada
-- Commit atual
+Displays all active worktrees with:
+- Full path
+- Associated branch
+- Current commit
 
-## 🗑️ Desinstalação
+## 🗑️ Uninstallation
 
-### Desinstalação Automática
+### Automatic Uninstallation
 
 ```bash
 cd ~/workspace/projects/quaredx/scripts/worktree_automation
 ./uninstall.sh
 ```
 
-### O que o Desinstalador Faz
+### What the Uninstaller Does
 
-1. ✅ Remove link simbólico `~/bin/wt`
-2. ✅ Remove configurações do `.zshrc`
-3. ✅ Remove configurações do `.bashrc` ou `.bash_profile`
-4. ✅ Cria backups antes de modificar arquivos de configuração
-5. ✅ Opcionalmente remove `~/bin/` se estiver vazio
+1. ✅ Removes symbolic link `~/bin/wt`
+2. ✅ Removes configurations from `.zshrc`
+3. ✅ Removes configurations from `.bashrc` or `.bash_profile`
+4. ✅ Creates backups before modifying configuration files
+5. ✅ Optionally removes `~/bin/` if empty
 
-**IMPORTANTE:** O código fonte em `scripts/worktree_automation/` **NÃO** é removido.
+**IMPORTANT:** Source code in `scripts/worktree_automation/` is **NOT** removed.
 
-### Desinstalação Manual
+### Manual Uninstallation
 
 ```bash
-# Remover link simbólico
+# Remove symbolic link
 rm ~/bin/wt
 
-# Remover configurações manualmente do .zshrc ou .bashrc
-# (Procure por "# Git Worktree Manager" e remova as 3 linhas)
+# Manually remove configurations from .zshrc or .bashrc
+# (Look for "# Git Worktree Manager" and remove the 3 lines)
 
-# Recarregar shell
+# Reload shell
 source ~/.zshrc
 ```
 
-## ⚙️ Configuração do Diretório de Trabalho
+## ⚙️ Working Directory Configuration
 
-### Primeira Configuração
+### First Configuration
 
-Na primeira execução do comando `wt`, você será solicitado a configurar o diretório base onde seus projetos Git estão localizados:
+On first execution of the `wt` command, you'll be asked to configure the base directory where your Git projects are located:
 
 ```bash
 $ wt
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    ⚙️  Configurar Diretório de Trabalho
+    ⚙️  Configure Working Directory
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Digite o caminho do diretório onde seus projetos Git estão localizados:
-(Use Tab para autocomplete de caminhos)
+Enter the path to the directory where your Git projects are located:
+(Use Tab for path autocomplete)
 
-Diretório: ~/projects
+Directory: ~/projects
 
-✅ Configuração salva em ~/.wt_config
-✅ Diretório configurado com sucesso!
+✅ Configuration saved in ~/.wt_config
+✅ Directory configured successfully!
 
-ℹ️  Projetos Git encontrados: 3
+ℹ️  Git projects found: 3
 ```
 
-### Reconfigurar Diretório
+### Reconfigure Directory
 
-Para alterar o diretório de trabalho a qualquer momento:
+To change the working directory at any time:
 
-1. Execute `wt` (sem argumentos)
-2. Escolha opção `4) Configurar diretório de trabalho`
-3. Digite o novo caminho (use Tab para autocomplete)
-4. Confirme a mudança
+1. Run `wt` (without arguments)
+2. Choose option `4) Configure working directory`
+3. Enter the new path (use Tab for autocomplete)
+4. Confirm the change
 
-### Arquivo de Configuração
+### Configuration File
 
-A configuração é salva em `~/.wt_config`:
+Configuration is saved in `~/.wt_config`:
 
 ```bash
-# Ver configuração atual
+# View current configuration
 cat ~/.wt_config
 
-# Resetar configuração (será solicitado novo diretório na próxima execução)
+# Reset configuration (will ask for new directory on next run)
 rm ~/.wt_config
 ```
 
-## 🤖 Configuração do Agente IA
+## 🤖 AI Agent Configuration
 
-### Agentes Suportados
+### Supported Agents
 
-O script suporta abertura automática de diversos agentes IA após criar um worktree:
+The script supports automatic opening of various AI agents after creating a worktree:
 
 - **Claude Code** (`claude`)
 - **Cursor** (`cursor`)
 - **Gemini** (`gemini`)
 - **GitHub Copilot** (`code`)
 - **Windsurf** (`windsurf`)
-- **Nenhum** (não abrir agente automaticamente)
-- **Outro** (customizado - informe o comando)
+- **None** (don't open agent automatically)
+- **Other** (custom - provide the command)
 
-### Primeira Configuração
+### First Configuration
 
-Na primeira execução (após configurar o diretório de trabalho), você será solicitado a configurar o agente IA:
+On first execution (after configuring the working directory), you'll be asked to configure the AI agent:
 
 ```bash
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    🤖 Configurar Agente IA
+    🤖 Configure AI Agent
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Selecione o agente IA que você utiliza:
+Select the AI agent you use:
 
   1) Claude Code
   2) Cursor
   3) Gemini
   4) GitHub Copilot (codex)
   5) Windsurf
-  6) Nenhum (não abrir agente automaticamente)
-  7) Outro (customizado)
+  6) None (don't open agent automatically)
+  7) Other (custom)
 
-Escolha (1-7): 1
+Choose (1-7): 1
 
-Como deseja usar o agente?
+How do you want to use the agent?
 
-  1) Sempre usar claude (configuração fixa)
-  2) Perguntar qual agente usar a cada worktree criado
+  1) Always use claude (fixed configuration)
+  2) Ask which agent to use for each worktree created
 
-Escolha (1-2): 1
+Choose (1-2): 1
 
-✅ Agente configurado com sucesso!
+✅ Agent configured successfully!
 
-ℹ️  Modo: Sempre usar claude
+ℹ️  Mode: Always use claude
 ```
 
-### Modos de Uso
+### Usage Modes
 
-#### Modo Fixo (Padrão)
+#### Fixed Mode (Default)
 
-O agente configurado será aberto automaticamente sempre que criar um worktree.
+The configured agent will be opened automatically whenever you create a worktree.
 
-**Vantagem:** Mais rápido, não precisa escolher toda vez.
+**Advantage:** Faster, no need to choose every time.
 
-#### Modo Dinâmico (Perguntar a cada vez)
+#### Dynamic Mode (Ask each time)
 
-Ao criar um worktree, você será perguntado qual agente abrir.
+When creating a worktree, you'll be asked which agent to open.
 
-**Vantagem:** Flexibilidade para alternar entre agentes conforme necessidade.
+**Advantage:** Flexibility to switch between agents as needed.
 
-### Reconfigurar Agente
+### Reconfigure Agent
 
-Para alterar o agente ou modo a qualquer momento:
+To change the agent or mode at any time:
 
-1. Execute `wt` (sem argumentos)
-2. Escolha opção `5) Configurar agente IA`
-3. Selecione o novo agente
-4. Escolha o modo (fixo ou perguntar)
+1. Run `wt` (without arguments)
+2. Choose option `5) Configure AI agent`
+3. Select the new agent
+4. Choose the mode (fixed or ask)
 
-### Exemplo de Uso
+### Usage Example
 
-**Modo Fixo:**
+**Fixed Mode:**
 ```bash
-$ wt myapp criar
-# ... criação do worktree ...
-ℹ️  Iniciando claude...
-# Claude abre automaticamente ✅
+$ wt myapp create
+# ... worktree creation ...
+ℹ️  Starting claude...
+# Claude opens automatically ✅
 ```
 
-**Modo Dinâmico:**
+**Dynamic Mode:**
 ```bash
-$ wt myapp criar
-# ... criação do worktree ...
+$ wt myapp create
+# ... worktree creation ...
 
-Qual agente deseja abrir?
+Which agent do you want to open?
 
   1) Claude Code
   2) Cursor
   3) Gemini
   4) GitHub Copilot (code)
   5) Windsurf
-  6) Nenhum
-  7) Outro
+  6) None
+  7) Other
 
-Escolha (1-7): 2
+Choose (1-7): 2
 
-ℹ️  Iniciando cursor...
-# Cursor abre ✅
+ℹ️  Starting cursor...
+# Cursor opens ✅
 ```
 
-### Arquivo de Configuração
+### Configuration File
 
-A configuração do agente é salva em `~/.wt_config`:
+Agent configuration is saved in `~/.wt_config`:
 
 ```bash
 BASE_DIR="/Users/{user}/projects"
 AGENT="claude:claude"
 ASK_AGENT_EVERY_TIME="false"
+LANGUAGE="en"
 ```
 
-**Formato:** `AGENT="nome:comando"`
+**Format:** `AGENT="name:command"`
+
+## 🌐 Language Configuration
+
+The script supports three languages:
+- **English** (default)
+- **Português (Brasil)**
+- **Español**
+
+### Change Language
+
+1. Run `wt` (without arguments)
+2. Choose option `6) Change language`
+3. Select your preferred language
+4. The interface will be updated immediately
+
+Language preference is saved in `~/.wt_config` and persists across sessions.
 
 ## 🔧 Troubleshooting
 
-### Comando `wt` não encontrado
+### Command `wt` not found
 
-**Causa:** PATH não atualizado ou shell não recarregado
+**Cause:** PATH not updated or shell not reloaded
 
-**Solução:**
+**Solution:**
 ```bash
-# Recarregar shell
-source ~/.zshrc  # ou source ~/.bashrc
+# Reload shell
+source ~/.zshrc  # or source ~/.bashrc
 
-# Ou abrir novo terminal
+# Or open new terminal
 ```
 
-### Projeto não encontrado
+### Project not found
 
-**Causa:** Diretório de trabalho não configurado ou projeto não existe
+**Cause:** Working directory not configured or project doesn't exist
 
-**Solução:**
-1. Configurar/reconfigurar o diretório de trabalho: `wt` → opção 4
-2. Verificar se o projeto contém `.git/`
-3. Executar `wt` sem argumentos para ver projetos disponíveis
+**Solution:**
+1. Configure/reconfigure working directory: `wt` → option 4
+2. Check if project contains `.git/`
+3. Run `wt` without arguments to see available projects
 
-### Branch main não encontrada
+### Branch main not found
 
-**Causa:** Repositório usa `master` ou outra branch padrão
+**Cause:** Repository uses `master` or another default branch
 
-**Solução:**
-Edite o script `wt.sh` linha ~80:
+**Solution:**
+Edit the `wt.sh` script around line ~80:
 ```bash
-# De:
+# From:
 if [ "$CURRENT_BRANCH" != "main" ]; then
 
-# Para:
+# To:
 if [ "$CURRENT_BRANCH" != "master" ]; then
 ```
 
-### Claude Code não abre automaticamente
+### AI agent doesn't open automatically
 
-**Causa:** Claude Code não instalado ou não está no PATH
+**Cause:** Agent not installed or not in PATH
 
-**Solução:**
-- Script funciona normalmente, apenas não abre Claude
-- Navegue manualmente e abra: `cd ../feature-name && claude`
-- Ou desabilite no script (linha ~145): comente o bloco `if command -v claude`
+**Solution:**
+- Script works normally, just doesn't open the agent
+- Navigate manually and open: `cd ../feature-name && claude`
+- Or reconfigure agent: `wt` → option 5
 
-### Worktree já existe
+### Worktree already exists
 
-**Causa:** Tentando criar worktree com nome/branch que já existe
+**Cause:** Trying to create worktree with existing name/branch
 
-**Solução:**
-1. Liste worktrees existentes: `wt roddi listar`
-2. Remova o worktree antigo: `wt roddi remover`
-3. Ou escolha outro nome
+**Solution:**
+1. List existing worktrees: `wt myapp list`
+2. Remove old worktree: `wt myapp remove`
+3. Or choose another name
 
-### Permissão negada ao executar scripts
+### Permission denied when running scripts
 
-**Causa:** Scripts sem permissão de execução
+**Cause:** Scripts without execution permission
 
-**Solução:**
+**Solution:**
 ```bash
 chmod +x ~/workspace/projects/quaredx/scripts/worktree_automation/*.sh
 ```
 
-### Link simbólico quebrado
+### Broken symbolic link
 
-**Causa:** Arquivo `wt.sh` foi movido ou removido
+**Cause:** `wt.sh` file was moved or removed
 
-**Solução:**
+**Solution:**
 ```bash
-# Reinstalar
+# Reinstall
 cd ~/workspace/projects/quaredx/scripts/worktree_automation
 ./install.sh
 ```
 
-## 🔄 Replicar em Outros Computadores
+## 🔄 Replicate on Other Computers
 
-### Requisitos em Novo Computador
+### Requirements on New Computer
 
-1. **Estrutura de diretórios:**
+1. **Directory structure:**
    ```bash
    mkdir -p ~/workspace/projects/quaredx/scripts
    ```
 
-2. **Git instalado:**
+2. **Git installed:**
    ```bash
    git --version
    ```
 
-3. **Shell config (zsh ou bash):**
+3. **Shell config (zsh or bash):**
    ```bash
    echo $SHELL
    ```
 
-### Passo a Passo para Replicação
+### Step-by-Step Replication
 
-#### Opção 1: Via Git (Recomendado)
+#### Option 1: Via Git (Recommended)
 
 ```bash
-# 1. Clone ou sincronize o repositório
+# 1. Clone or sync the repository
 cd ~/workspace/projects/quaredx
 git clone <repo-url> scripts
-# ou
-git pull  # se já estiver clonado
+# or
+git pull  # if already cloned
 
-# 2. Navegue para a pasta do script
+# 2. Navigate to script folder
 cd scripts/worktree_automation
 
-# 3. Execute o instalador
+# 3. Run the installer
 chmod +x install.sh
 ./install.sh
 
-# 4. Recarregue o shell
-source ~/.zshrc  # ou source ~/.bashrc
+# 4. Reload shell
+source ~/.zshrc  # or source ~/.bashrc
 
-# 5. Teste
+# 5. Test
 wt
 ```
 
-#### Opção 2: Cópia Manual
+#### Option 2: Manual Copy
 
 ```bash
-# 1. Criar estrutura
+# 1. Create structure
 mkdir -p ~/workspace/projects/quaredx/scripts/worktree_automation
 
-# 2. Copiar arquivos
+# 2. Copy files
 # (Use scp, rsync, cloud sync, etc.)
 scp user@old-machine:~/workspace/projects/quaredx/scripts/worktree_automation/* \
     ~/workspace/projects/quaredx/scripts/worktree_automation/
 
-# 3. Executar instalador
+# 3. Run installer
 cd ~/workspace/projects/quaredx/scripts/worktree_automation
 chmod +x *.sh
 ./install.sh
 
-# 4. Recarregar shell
+# 4. Reload shell
 source ~/.zshrc
 
-# 5. Teste
+# 5. Test
 wt
 ```
 
-### Checklist de Replicação
+### Replication Checklist
 
-- [ ] Estrutura de diretórios criada: `~/workspace/projects/quaredx/`
-- [ ] Scripts copiados para: `~/workspace/projects/quaredx/scripts/worktree_automation/`
-- [ ] Instalador executado: `./install.sh`
-- [ ] Shell recarregado: `source ~/.zshrc`
-- [ ] Comando testado: `wt`
-- [ ] Projetos Git clonados na estrutura correta
+- [ ] Directory structure created: `~/workspace/projects/quaredx/`
+- [ ] Scripts copied to: `~/workspace/projects/quaredx/scripts/worktree_automation/`
+- [ ] Installer executed: `./install.sh`
+- [ ] Shell reloaded: `source ~/.zshrc`
+- [ ] Command tested: `wt`
+- [ ] Git projects cloned in correct structure
 
-### Sincronização Contínua
+### Continuous Synchronization
 
-Para manter o script atualizado em múltiplos computadores:
+To keep the script updated on multiple computers:
 
-1. **Versione o script com Git:**
+1. **Version the script with Git:**
    ```bash
    cd ~/workspace/projects/quaredx/scripts
    git init
@@ -647,54 +668,60 @@ Para manter o script atualizado em múltiplos computadores:
    git push -u origin main
    ```
 
-2. **Em outros computadores:**
+2. **On other computers:**
    ```bash
    cd ~/workspace/projects/quaredx/scripts
    git pull
    ```
 
-3. **Reinstale se houver mudanças:**
+3. **Reinstall if there are changes:**
    ```bash
    cd worktree_automation
    ./install.sh
    ```
 
-## 📝 Estrutura de Arquivos
+## 📝 File Structure
 
 ```
 worktree_automation/
-├── README.md              # Este arquivo - Documentação completa
-├── wt.sh                  # Script principal - Código fonte
-├── install.sh             # Instalador automático
-└── uninstall.sh          # Desinstalador automático
+├── README.md              # This file - Complete documentation (English)
+├── README.pt-BR.md        # Documentation in Portuguese
+├── README.es.md           # Documentation in Spanish
+├── wt.sh                  # Main script - Source code
+├── install.sh             # Automatic installer
+└── uninstall.sh          # Automatic uninstaller
 ```
 
-### Descrição dos Arquivos
+### File Descriptions
 
-- **`wt.sh`**: Código fonte principal do Worktree Manager
-- **`install.sh`**: Script de instalação automática (cria links, configura PATH, etc.)
-- **`uninstall.sh`**: Script de desinstalação limpa (remove links e configurações)
-- **`README.md`**: Documentação completa (este arquivo)
+- **`wt.sh`**: Main source code of Worktree Manager
+- **`install.sh`**: Automatic installation script (creates links, configures PATH, etc.)
+- **`uninstall.sh`**: Clean uninstallation script (removes links and configurations)
+- **`README.md`**: Complete documentation in English (this file)
+- **`README.pt-BR.md`**: Complete documentation in Portuguese
+- **`README.es.md`**: Complete documentation in Spanish
 
 ## 🎨 Interface
 
-O script possui interface colorida para facilitar visualização:
+The script has a colored interface for easier visualization:
 
-- 🔴 **Vermelho**: Erros
-- 🟢 **Verde**: Sucesso
-- 🟡 **Amarelo**: Avisos
-- 🔵 **Azul**: Títulos e menus
-- 🔵 **Cyan**: Informações
+- 🔴 **Red**: Errors
+- 🟢 **Green**: Success
+- 🟡 **Yellow**: Warnings
+- 🔵 **Blue**: Titles and menus
+- 🔵 **Cyan**: Information
 
-## 📄 Licença
+## 📄 License
 
-Este script foi desenvolvido para uso interno do projeto Quaredx.
+This script was developed for internal use of the Quaredx project.
 
-## 👤 Autor
+## 👤 Author
 
 **Quaredx**
 
 ---
 
-**Versão:** 1.0.0
-**Última atualização:** 2025-10-04
+**Version:** 2.0.0
+**Last update:** 2025-10-04
+
+> **Language / Idioma / Idioma:** [🇺🇸 English](README.md) | [🇧🇷 Português](README.pt-BR.md) | [🇪🇸 Español](README.es.md)

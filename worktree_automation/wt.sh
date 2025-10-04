@@ -15,6 +15,388 @@ NC='\033[0m' # No Color
 # Arquivo de configuração
 CONFIG_FILE="$HOME/.wt_config"
 
+# Idioma padrão
+LANGUAGE="${LANGUAGE:-en}"
+
+# Função para carregar textos do idioma
+load_language() {
+    case "$LANGUAGE" in
+        pt|pt-BR|pt_BR)
+            # Português
+            TXT_TITLE="🌳 Git Worktree Manager"
+            TXT_MENU_CREATE="Criar novo worktree"
+            TXT_MENU_REMOVE="Remover worktree existente"
+            TXT_MENU_LIST="Listar worktrees"
+            TXT_MENU_CONFIG_DIR="Configurar diretório de trabalho"
+            TXT_MENU_CONFIG_AGENT="Configurar agente IA"
+            TXT_MENU_CHANGE_LANG="Alterar idioma"
+            TXT_MENU_EXIT="Sair"
+            TXT_CURRENT_DIR="📂 Diretório atual"
+            TXT_CURRENT_AGENT="🤖 Agente"
+            TXT_CHOOSE_OPTION="Escolha uma opção"
+            TXT_INVALID_OPTION="Opção inválida"
+            TXT_EXITING="Saindo..."
+            TXT_CONFIG_SAVED="Configuração salva em"
+            TXT_SUCCESS="✅"
+            TXT_ERROR="❌ Erro"
+            TXT_WARNING="⚠️"
+            TXT_INFO="ℹ️"
+            TXT_LANGUAGE_NAME="Português (Brasil)"
+            # Config Dir
+            TXT_CONFIG_DIR_TITLE="⚙️  Configurar Diretório de Trabalho"
+            TXT_CONFIG_DIR_CURRENT="Diretório atual"
+            TXT_CONFIG_DIR_ENTER="Digite o caminho do diretório onde seus projetos Git estão localizados:"
+            TXT_CONFIG_DIR_TAB="(Use Tab para autocomplete de caminhos)"
+            TXT_CONFIG_DIR_PROMPT="Diretório"
+            TXT_CONFIG_DIR_EMPTY="Diretório não pode ser vazio"
+            TXT_CONFIG_DIR_NOT_EXIST="Diretório '%s' não existe"
+            TXT_CONFIG_DIR_NO_GIT="Nenhum projeto Git encontrado em '%s'"
+            TXT_CONFIG_DIR_CONFIRM="Deseja usar este diretório mesmo assim? (y/n):"
+            TXT_CONFIG_DIR_CANCELLED="Configuração cancelada"
+            TXT_CONFIG_DIR_SUCCESS="Diretório configurado com sucesso!"
+            TXT_CONFIG_DIR_PROJECTS_FOUND="Projetos Git encontrados: %s"
+            TXT_PRESS_ENTER="Pressione Enter para continuar..."
+            # Config Agent
+            TXT_CONFIG_AGENT_TITLE="🤖 Configurar Agente IA"
+            TXT_CONFIG_AGENT_CURRENT="Agente atual: %s"
+            TXT_CONFIG_AGENT_MODE_ASK="Modo: Perguntar a cada worktree"
+            TXT_CONFIG_AGENT_MODE_FIXED="Modo: Sempre usar %s"
+            TXT_CONFIG_AGENT_SELECT="Selecione o agente IA que você utiliza:"
+            TXT_CONFIG_AGENT_NONE="Nenhum (não abrir agente automaticamente)"
+            TXT_CONFIG_AGENT_OTHER="Outro (customizado)"
+            TXT_CONFIG_AGENT_CHOOSE="Escolha (1-7):"
+            TXT_CONFIG_AGENT_NAME="Nome do agente:"
+            TXT_CONFIG_AGENT_CMD="Comando para abrir:"
+            TXT_CONFIG_AGENT_EMPTY="Nome e comando não podem ser vazios"
+            TXT_CONFIG_AGENT_MODE="Como deseja usar o agente?"
+            TXT_CONFIG_AGENT_MODE_1="Sempre usar %s (configuração fixa)"
+            TXT_CONFIG_AGENT_MODE_2="Perguntar qual agente usar a cada worktree criado"
+            TXT_CONFIG_AGENT_MODE_CHOOSE="Escolha (1-2):"
+            TXT_CONFIG_AGENT_SUCCESS="Agente configurado com sucesso!"
+            TXT_CONFIG_AGENT_INFO_ASK="Modo: Você será perguntado qual agente usar a cada worktree"
+            TXT_CONFIG_AGENT_INFO_FIXED="Modo: Sempre usar %s"
+            # Config Language
+            TXT_CONFIG_LANG_TITLE="🌐 Configurar Idioma"
+            TXT_CONFIG_LANG_SELECT="Selecione o idioma / Select language / Seleccionar idioma:"
+            TXT_CONFIG_LANG_SUCCESS="Idioma alterado para: %s"
+            # Project Selection
+            TXT_PROJECT_AVAILABLE="📁 Projetos disponíveis:"
+            TXT_PROJECT_CHOOSE="Escolha o número do projeto (ou 'q' para sair):"
+            TXT_PROJECT_EMPTY="Escolha não pode ser vazia"
+            TXT_PROJECT_INVALID_NUM="Digite um número válido"
+            TXT_PROJECT_INVALID_RANGE="Opção inválida. Escolha entre 1 e %s"
+            TXT_PROJECT_NONE_FOUND="Nenhum projeto Git encontrado em %s"
+            TXT_PROJECT_NOT_CAPTURED="Nome do projeto não foi capturado corretamente"
+            TXT_PROJECT_NAME="Projeto: %s"
+            TXT_PROJECT_DIR="Diretório: %s"
+            TXT_PROJECT_NOT_FOUND="Diretório do projeto '%s' não encontrado em %s"
+            TXT_PROJECT_NOT_GIT="Não é um repositório Git válido"
+            # Branch
+            TXT_BRANCH_ON="Na branch %s ✓"
+            TXT_BRANCH_NOT_MAIN="Você está na branch '%s' (não é main/master)"
+            TXT_BRANCH_CHANGE="Deseja trocar para branch principal? (y/n):"
+            TXT_BRANCH_CHANGE_FAILED="Não foi possível trocar para %s"
+            TXT_BRANCH_NO_MAIN="Nenhuma branch principal (main/master) encontrada"
+            TXT_BRANCH_CONTINUING="Continuando na branch: %s"
+            # Worktree List
+            TXT_WORKTREE_LIST="📋 Worktrees existentes:"
+            # Worktree Create
+            TXT_WORKTREE_CREATE_TITLE="✨ Criar Novo Worktree"
+            TXT_WORKTREE_TYPE="Tipo de branch:"
+            TXT_WORKTREE_TYPE_1="feat (feature)"
+            TXT_WORKTREE_TYPE_2="fix (bugfix)"
+            TXT_WORKTREE_TYPE_3="release"
+            TXT_WORKTREE_TYPE_4="refactor"
+            TXT_WORKTREE_TYPE_5="Outro (customizado)"
+            TXT_WORKTREE_TYPE_CHOOSE="Escolha (1-5):"
+            TXT_WORKTREE_TYPE_CUSTOM="Digite o prefixo customizado:"
+            TXT_WORKTREE_TYPE_EMPTY="Prefixo não pode ser vazio"
+            TXT_WORKTREE_TYPE_INVALID="Prefixo inválido"
+            TXT_WORKTREE_NAME_PROMPT="Nome do %s:"
+            TXT_WORKTREE_NAME_EMPTY="Nome não pode ser vazio"
+            TXT_WORKTREE_BRANCH="Branch: %s"
+            TXT_WORKTREE_DIR_INFO="Diretório: %s"
+            TXT_WORKTREE_CONFIRM="Confirmar criação? (y/n):"
+            TXT_WORKTREE_CANCELLED="Operação cancelada"
+            TXT_WORKTREE_CREATING="Criando worktree..."
+            TXT_WORKTREE_SUCCESS="Worktree criado com sucesso!"
+            TXT_WORKTREE_NAVIGATING="Navegando para %s..."
+            TXT_WORKTREE_CURRENT_DIR="Diretório atual: %s"
+            TXT_WORKTREE_AGENT_ASK="Qual agente deseja abrir?"
+            TXT_WORKTREE_AGENT_INVALID="Opção inválida, pulando abertura do agente"
+            TXT_WORKTREE_AGENT_CUSTOM="Comando do agente:"
+            TXT_WORKTREE_AGENT_NONE="Nenhum agente será aberto automaticamente"
+            TXT_WORKTREE_AGENT_STARTING="Iniciando %s..."
+            TXT_WORKTREE_AGENT_NOT_FOUND="Comando '%s' não encontrado. Inicie manualmente se necessário."
+            TXT_WORKTREE_FAILED="Falha ao criar worktree. Verifique se a branch já existe."
+            # Worktree Remove
+            TXT_WORKTREE_REMOVE_TITLE="🗑️  Remover Worktree"
+            TXT_WORKTREE_REMOVE_NONE="Nenhum worktree adicional encontrado"
+            TXT_WORKTREE_REMOVE_AVAILABLE="Worktrees disponíveis para remoção:"
+            TXT_WORKTREE_REMOVE_CHOOSE="Escolha o número do worktree para remover (ou 0 para cancelar):"
+            TXT_WORKTREE_REMOVE_CONFIRM="Você está prestes a remover: %s"
+            TXT_WORKTREE_REMOVE_CONFIRM_Q="Confirmar remoção? (y/n):"
+            TXT_WORKTREE_REMOVING="Removendo worktree..."
+            TXT_WORKTREE_REMOVE_SUCCESS="Worktree removido com sucesso!"
+            TXT_WORKTREE_REMOVE_FAILED="Falha ao remover worktree"
+            # Operation
+            TXT_OPERATION_INVALID="Operação inválida. Use: criar, remover ou listar"
+            TXT_CONFIG_INITIAL_NEEDED="Configuração inicial necessária"
+            TXT_AGENT_ASK_EVERY="Perguntar a cada worktree"
+            TXT_AGENT_FIXED="%s (fixo)"
+            ;;
+        es|es-ES|es_ES)
+            # Español
+            TXT_TITLE="🌳 Git Worktree Manager"
+            TXT_MENU_CREATE="Crear nuevo worktree"
+            TXT_MENU_REMOVE="Eliminar worktree existente"
+            TXT_MENU_LIST="Listar worktrees"
+            TXT_MENU_CONFIG_DIR="Configurar directorio de trabajo"
+            TXT_MENU_CONFIG_AGENT="Configurar agente IA"
+            TXT_MENU_CHANGE_LANG="Cambiar idioma"
+            TXT_MENU_EXIT="Salir"
+            TXT_CURRENT_DIR="📂 Directorio actual"
+            TXT_CURRENT_AGENT="🤖 Agente"
+            TXT_CHOOSE_OPTION="Elige una opción"
+            TXT_INVALID_OPTION="Opción inválida"
+            TXT_EXITING="Saliendo..."
+            TXT_CONFIG_SAVED="Configuración guardada en"
+            TXT_SUCCESS="✅"
+            TXT_ERROR="❌ Error"
+            TXT_WARNING="⚠️"
+            TXT_INFO="ℹ️"
+            TXT_LANGUAGE_NAME="Español"
+            # Config Dir
+            TXT_CONFIG_DIR_TITLE="⚙️  Configurar Directorio de Trabajo"
+            TXT_CONFIG_DIR_CURRENT="Directorio actual"
+            TXT_CONFIG_DIR_ENTER="Ingrese la ruta del directorio donde se encuentran sus proyectos Git:"
+            TXT_CONFIG_DIR_TAB="(Use Tab para autocompletar rutas)"
+            TXT_CONFIG_DIR_PROMPT="Directorio"
+            TXT_CONFIG_DIR_EMPTY="El directorio no puede estar vacío"
+            TXT_CONFIG_DIR_NOT_EXIST="El directorio '%s' no existe"
+            TXT_CONFIG_DIR_NO_GIT="No se encontraron proyectos Git en '%s'"
+            TXT_CONFIG_DIR_CONFIRM="¿Desea usar este directorio de todos modos? (y/n):"
+            TXT_CONFIG_DIR_CANCELLED="Configuración cancelada"
+            TXT_CONFIG_DIR_SUCCESS="¡Directorio configurado con éxito!"
+            TXT_CONFIG_DIR_PROJECTS_FOUND="Proyectos Git encontrados: %s"
+            TXT_PRESS_ENTER="Presione Enter para continuar..."
+            # Config Agent
+            TXT_CONFIG_AGENT_TITLE="🤖 Configurar Agente IA"
+            TXT_CONFIG_AGENT_CURRENT="Agente actual: %s"
+            TXT_CONFIG_AGENT_MODE_ASK="Modo: Preguntar en cada worktree"
+            TXT_CONFIG_AGENT_MODE_FIXED="Modo: Siempre usar %s"
+            TXT_CONFIG_AGENT_SELECT="Seleccione el agente IA que utiliza:"
+            TXT_CONFIG_AGENT_NONE="Ninguno (no abrir agente automáticamente)"
+            TXT_CONFIG_AGENT_OTHER="Otro (personalizado)"
+            TXT_CONFIG_AGENT_CHOOSE="Elija (1-7):"
+            TXT_CONFIG_AGENT_NAME="Nombre del agente:"
+            TXT_CONFIG_AGENT_CMD="Comando para abrir:"
+            TXT_CONFIG_AGENT_EMPTY="El nombre y el comando no pueden estar vacíos"
+            TXT_CONFIG_AGENT_MODE="¿Cómo desea usar el agente?"
+            TXT_CONFIG_AGENT_MODE_1="Siempre usar %s (configuración fija)"
+            TXT_CONFIG_AGENT_MODE_2="Preguntar qué agente usar en cada worktree creado"
+            TXT_CONFIG_AGENT_MODE_CHOOSE="Elija (1-2):"
+            TXT_CONFIG_AGENT_SUCCESS="¡Agente configurado con éxito!"
+            TXT_CONFIG_AGENT_INFO_ASK="Modo: Se le preguntará qué agente usar en cada worktree"
+            TXT_CONFIG_AGENT_INFO_FIXED="Modo: Siempre usar %s"
+            # Config Language
+            TXT_CONFIG_LANG_TITLE="🌐 Configurar Idioma"
+            TXT_CONFIG_LANG_SELECT="Selecione o idioma / Select language / Seleccionar idioma:"
+            TXT_CONFIG_LANG_SUCCESS="Idioma cambiado a: %s"
+            # Project Selection
+            TXT_PROJECT_AVAILABLE="📁 Proyectos disponibles:"
+            TXT_PROJECT_CHOOSE="Elija el número del proyecto (o 'q' para salir):"
+            TXT_PROJECT_EMPTY="La elección no puede estar vacía"
+            TXT_PROJECT_INVALID_NUM="Ingrese un número válido"
+            TXT_PROJECT_INVALID_RANGE="Opción inválida. Elija entre 1 y %s"
+            TXT_PROJECT_NONE_FOUND="No se encontraron proyectos Git en %s"
+            TXT_PROJECT_NOT_CAPTURED="El nombre del proyecto no se capturó correctamente"
+            TXT_PROJECT_NAME="Proyecto: %s"
+            TXT_PROJECT_DIR="Directorio: %s"
+            TXT_PROJECT_NOT_FOUND="Directorio del proyecto '%s' no encontrado en %s"
+            TXT_PROJECT_NOT_GIT="No es un repositorio Git válido"
+            # Branch
+            TXT_BRANCH_ON="En la rama %s ✓"
+            TXT_BRANCH_NOT_MAIN="Está en la rama '%s' (no es main/master)"
+            TXT_BRANCH_CHANGE="¿Desea cambiar a la rama principal? (y/n):"
+            TXT_BRANCH_CHANGE_FAILED="No se pudo cambiar a %s"
+            TXT_BRANCH_NO_MAIN="No se encontró ninguna rama principal (main/master)"
+            TXT_BRANCH_CONTINUING="Continuando en la rama: %s"
+            # Worktree List
+            TXT_WORKTREE_LIST="📋 Worktrees existentes:"
+            # Worktree Create
+            TXT_WORKTREE_CREATE_TITLE="✨ Crear Nuevo Worktree"
+            TXT_WORKTREE_TYPE="Tipo de rama:"
+            TXT_WORKTREE_TYPE_1="feat (feature)"
+            TXT_WORKTREE_TYPE_2="fix (bugfix)"
+            TXT_WORKTREE_TYPE_3="release"
+            TXT_WORKTREE_TYPE_4="refactor"
+            TXT_WORKTREE_TYPE_5="Otro (personalizado)"
+            TXT_WORKTREE_TYPE_CHOOSE="Elija (1-5):"
+            TXT_WORKTREE_TYPE_CUSTOM="Ingrese el prefijo personalizado:"
+            TXT_WORKTREE_TYPE_EMPTY="El prefijo no puede estar vacío"
+            TXT_WORKTREE_TYPE_INVALID="Prefijo inválido"
+            TXT_WORKTREE_NAME_PROMPT="Nombre del %s:"
+            TXT_WORKTREE_NAME_EMPTY="El nombre no puede estar vacío"
+            TXT_WORKTREE_BRANCH="Rama: %s"
+            TXT_WORKTREE_DIR_INFO="Directorio: %s"
+            TXT_WORKTREE_CONFIRM="¿Confirmar creación? (y/n):"
+            TXT_WORKTREE_CANCELLED="Operación cancelada"
+            TXT_WORKTREE_CREATING="Creando worktree..."
+            TXT_WORKTREE_SUCCESS="¡Worktree creado con éxito!"
+            TXT_WORKTREE_NAVIGATING="Navegando a %s..."
+            TXT_WORKTREE_CURRENT_DIR="Directorio actual: %s"
+            TXT_WORKTREE_AGENT_ASK="¿Qué agente desea abrir?"
+            TXT_WORKTREE_AGENT_INVALID="Opción inválida, omitiendo apertura del agente"
+            TXT_WORKTREE_AGENT_CUSTOM="Comando del agente:"
+            TXT_WORKTREE_AGENT_NONE="No se abrirá ningún agente automáticamente"
+            TXT_WORKTREE_AGENT_STARTING="Iniciando %s..."
+            TXT_WORKTREE_AGENT_NOT_FOUND="Comando '%s' no encontrado. Inicie manualmente si es necesario."
+            TXT_WORKTREE_FAILED="Error al crear worktree. Verifique si la rama ya existe."
+            # Worktree Remove
+            TXT_WORKTREE_REMOVE_TITLE="🗑️  Eliminar Worktree"
+            TXT_WORKTREE_REMOVE_NONE="No se encontraron worktrees adicionales"
+            TXT_WORKTREE_REMOVE_AVAILABLE="Worktrees disponibles para eliminación:"
+            TXT_WORKTREE_REMOVE_CHOOSE="Elija el número del worktree para eliminar (o 0 para cancelar):"
+            TXT_WORKTREE_REMOVE_CONFIRM="Está a punto de eliminar: %s"
+            TXT_WORKTREE_REMOVE_CONFIRM_Q="¿Confirmar eliminación? (y/n):"
+            TXT_WORKTREE_REMOVING="Eliminando worktree..."
+            TXT_WORKTREE_REMOVE_SUCCESS="¡Worktree eliminado con éxito!"
+            TXT_WORKTREE_REMOVE_FAILED="Error al eliminar worktree"
+            # Operation
+            TXT_OPERATION_INVALID="Operación inválida. Use: criar, remover o listar"
+            TXT_CONFIG_INITIAL_NEEDED="Se requiere configuración inicial"
+            TXT_AGENT_ASK_EVERY="Preguntar en cada worktree"
+            TXT_AGENT_FIXED="%s (fijo)"
+            ;;
+        *)
+            # English (default)
+            LANGUAGE="en"
+            TXT_TITLE="🌳 Git Worktree Manager"
+            TXT_MENU_CREATE="Create new worktree"
+            TXT_MENU_REMOVE="Remove existing worktree"
+            TXT_MENU_LIST="List worktrees"
+            TXT_MENU_CONFIG_DIR="Configure working directory"
+            TXT_MENU_CONFIG_AGENT="Configure AI agent"
+            TXT_MENU_CHANGE_LANG="Change language"
+            TXT_MENU_EXIT="Exit"
+            TXT_CURRENT_DIR="📂 Current directory"
+            TXT_CURRENT_AGENT="🤖 Agent"
+            TXT_CHOOSE_OPTION="Choose an option"
+            TXT_INVALID_OPTION="Invalid option"
+            TXT_EXITING="Exiting..."
+            TXT_CONFIG_SAVED="Configuration saved in"
+            TXT_SUCCESS="✅"
+            TXT_ERROR="❌ Error"
+            TXT_WARNING="⚠️"
+            TXT_INFO="ℹ️"
+            TXT_LANGUAGE_NAME="English"
+            # Config Dir
+            TXT_CONFIG_DIR_TITLE="⚙️  Configure Working Directory"
+            TXT_CONFIG_DIR_CURRENT="Current directory"
+            TXT_CONFIG_DIR_ENTER="Enter the path to the directory where your Git projects are located:"
+            TXT_CONFIG_DIR_TAB="(Use Tab for path autocomplete)"
+            TXT_CONFIG_DIR_PROMPT="Directory"
+            TXT_CONFIG_DIR_EMPTY="Directory cannot be empty"
+            TXT_CONFIG_DIR_NOT_EXIST="Directory '%s' does not exist"
+            TXT_CONFIG_DIR_NO_GIT="No Git projects found in '%s'"
+            TXT_CONFIG_DIR_CONFIRM="Do you want to use this directory anyway? (y/n):"
+            TXT_CONFIG_DIR_CANCELLED="Configuration cancelled"
+            TXT_CONFIG_DIR_SUCCESS="Directory configured successfully!"
+            TXT_CONFIG_DIR_PROJECTS_FOUND="Git projects found: %s"
+            TXT_PRESS_ENTER="Press Enter to continue..."
+            # Config Agent
+            TXT_CONFIG_AGENT_TITLE="🤖 Configure AI Agent"
+            TXT_CONFIG_AGENT_CURRENT="Current agent: %s"
+            TXT_CONFIG_AGENT_MODE_ASK="Mode: Ask for each worktree"
+            TXT_CONFIG_AGENT_MODE_FIXED="Mode: Always use %s"
+            TXT_CONFIG_AGENT_SELECT="Select the AI agent you use:"
+            TXT_CONFIG_AGENT_NONE="None (don't open agent automatically)"
+            TXT_CONFIG_AGENT_OTHER="Other (custom)"
+            TXT_CONFIG_AGENT_CHOOSE="Choose (1-7):"
+            TXT_CONFIG_AGENT_NAME="Agent name:"
+            TXT_CONFIG_AGENT_CMD="Command to open:"
+            TXT_CONFIG_AGENT_EMPTY="Name and command cannot be empty"
+            TXT_CONFIG_AGENT_MODE="How do you want to use the agent?"
+            TXT_CONFIG_AGENT_MODE_1="Always use %s (fixed configuration)"
+            TXT_CONFIG_AGENT_MODE_2="Ask which agent to use for each worktree created"
+            TXT_CONFIG_AGENT_MODE_CHOOSE="Choose (1-2):"
+            TXT_CONFIG_AGENT_SUCCESS="Agent configured successfully!"
+            TXT_CONFIG_AGENT_INFO_ASK="Mode: You will be asked which agent to use for each worktree"
+            TXT_CONFIG_AGENT_INFO_FIXED="Mode: Always use %s"
+            # Config Language
+            TXT_CONFIG_LANG_TITLE="🌐 Configure Language"
+            TXT_CONFIG_LANG_SELECT="Selecione o idioma / Select language / Seleccionar idioma:"
+            TXT_CONFIG_LANG_SUCCESS="Language changed to: %s"
+            # Project Selection
+            TXT_PROJECT_AVAILABLE="📁 Available projects:"
+            TXT_PROJECT_CHOOSE="Choose the project number (or 'q' to quit):"
+            TXT_PROJECT_EMPTY="Choice cannot be empty"
+            TXT_PROJECT_INVALID_NUM="Enter a valid number"
+            TXT_PROJECT_INVALID_RANGE="Invalid option. Choose between 1 and %s"
+            TXT_PROJECT_NONE_FOUND="No Git projects found in %s"
+            TXT_PROJECT_NOT_CAPTURED="Project name was not captured correctly"
+            TXT_PROJECT_NAME="Project: %s"
+            TXT_PROJECT_DIR="Directory: %s"
+            TXT_PROJECT_NOT_FOUND="Project directory '%s' not found in %s"
+            TXT_PROJECT_NOT_GIT="Not a valid Git repository"
+            # Branch
+            TXT_BRANCH_ON="On branch %s ✓"
+            TXT_BRANCH_NOT_MAIN="You are on branch '%s' (not main/master)"
+            TXT_BRANCH_CHANGE="Do you want to switch to main branch? (y/n):"
+            TXT_BRANCH_CHANGE_FAILED="Could not switch to %s"
+            TXT_BRANCH_NO_MAIN="No main branch (main/master) found"
+            TXT_BRANCH_CONTINUING="Continuing on branch: %s"
+            # Worktree List
+            TXT_WORKTREE_LIST="📋 Existing worktrees:"
+            # Worktree Create
+            TXT_WORKTREE_CREATE_TITLE="✨ Create New Worktree"
+            TXT_WORKTREE_TYPE="Branch type:"
+            TXT_WORKTREE_TYPE_1="feat (feature)"
+            TXT_WORKTREE_TYPE_2="fix (bugfix)"
+            TXT_WORKTREE_TYPE_3="release"
+            TXT_WORKTREE_TYPE_4="refactor"
+            TXT_WORKTREE_TYPE_5="Other (custom)"
+            TXT_WORKTREE_TYPE_CHOOSE="Choose (1-5):"
+            TXT_WORKTREE_TYPE_CUSTOM="Enter custom prefix:"
+            TXT_WORKTREE_TYPE_EMPTY="Prefix cannot be empty"
+            TXT_WORKTREE_TYPE_INVALID="Invalid prefix"
+            TXT_WORKTREE_NAME_PROMPT="Name of %s:"
+            TXT_WORKTREE_NAME_EMPTY="Name cannot be empty"
+            TXT_WORKTREE_BRANCH="Branch: %s"
+            TXT_WORKTREE_DIR_INFO="Directory: %s"
+            TXT_WORKTREE_CONFIRM="Confirm creation? (y/n):"
+            TXT_WORKTREE_CANCELLED="Operation cancelled"
+            TXT_WORKTREE_CREATING="Creating worktree..."
+            TXT_WORKTREE_SUCCESS="Worktree created successfully!"
+            TXT_WORKTREE_NAVIGATING="Navigating to %s..."
+            TXT_WORKTREE_CURRENT_DIR="Current directory: %s"
+            TXT_WORKTREE_AGENT_ASK="Which agent do you want to open?"
+            TXT_WORKTREE_AGENT_INVALID="Invalid option, skipping agent opening"
+            TXT_WORKTREE_AGENT_CUSTOM="Agent command:"
+            TXT_WORKTREE_AGENT_NONE="No agent will be opened automatically"
+            TXT_WORKTREE_AGENT_STARTING="Starting %s..."
+            TXT_WORKTREE_AGENT_NOT_FOUND="Command '%s' not found. Start manually if needed."
+            TXT_WORKTREE_FAILED="Failed to create worktree. Check if branch already exists."
+            # Worktree Remove
+            TXT_WORKTREE_REMOVE_TITLE="🗑️  Remove Worktree"
+            TXT_WORKTREE_REMOVE_NONE="No additional worktrees found"
+            TXT_WORKTREE_REMOVE_AVAILABLE="Worktrees available for removal:"
+            TXT_WORKTREE_REMOVE_CHOOSE="Choose the worktree number to remove (or 0 to cancel):"
+            TXT_WORKTREE_REMOVE_CONFIRM="You are about to remove: %s"
+            TXT_WORKTREE_REMOVE_CONFIRM_Q="Confirm removal? (y/n):"
+            TXT_WORKTREE_REMOVING="Removing worktree..."
+            TXT_WORKTREE_REMOVE_SUCCESS="Worktree removed successfully!"
+            TXT_WORKTREE_REMOVE_FAILED="Failed to remove worktree"
+            # Operation
+            TXT_OPERATION_INVALID="Invalid operation. Use: create, remove or list"
+            TXT_CONFIG_INITIAL_NEEDED="Initial configuration needed"
+            TXT_AGENT_ASK_EVERY="Ask for each worktree"
+            TXT_AGENT_FIXED="%s (fixed)"
+            ;;
+    esac
+}
+
 # Função para carregar configuração
 load_config() {
     if [ -f "$CONFIG_FILE" ]; then
@@ -22,8 +404,12 @@ load_config() {
         if [ -z "$BASE_DIR" ]; then
             return 1
         fi
+        # Carregar idioma após ler config
+        load_language
         return 0
     else
+        # Carregar idioma padrão
+        load_language
         return 1
     fi
 }
@@ -33,13 +419,15 @@ save_config() {
     local dir="$1"
     local agent="${2:-$AGENT}"
     local ask_every_time="${3:-$ASK_AGENT_EVERY_TIME}"
+    local lang="${4:-$LANGUAGE}"
 
     cat > "$CONFIG_FILE" << EOF
 BASE_DIR="$dir"
 AGENT="$agent"
 ASK_AGENT_EVERY_TIME="$ask_every_time"
+LANGUAGE="$lang"
 EOF
-    success "Configuração salva em $CONFIG_FILE"
+    success "$TXT_CONFIG_SAVED $CONFIG_FILE"
 }
 
 # Função para salvar apenas agente
@@ -216,6 +604,60 @@ setup_agent_config() {
     read -p "Pressione Enter para continuar..."
 }
 
+# Função para configurar idioma
+setup_language_config() {
+    clear
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BLUE}    $TXT_CONFIG_LANG_TITLE${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+
+    if [ -n "$LANGUAGE" ]; then
+        info "$(printf "%s: %s" "Current language" "$TXT_LANGUAGE_NAME")"
+        echo ""
+    fi
+
+    echo -e "${CYAN}$TXT_CONFIG_LANG_SELECT${NC}"
+    echo ""
+    echo "  1) English"
+    echo "  2) Português (Brasil)"
+    echo "  3) Español"
+    echo ""
+    read -p "Choose / Escolha / Elija (1-3): " LANG_CHOICE
+
+    case $LANG_CHOICE in
+        1)
+            NEW_LANGUAGE="en"
+            LANG_NAME="English"
+            ;;
+        2)
+            NEW_LANGUAGE="pt-BR"
+            LANG_NAME="Português (Brasil)"
+            ;;
+        3)
+            NEW_LANGUAGE="es"
+            LANG_NAME="Español"
+            ;;
+        *)
+            warning "$TXT_INVALID_OPTION"
+            sleep 1
+            return 1
+            ;;
+    esac
+
+    # Salvar configuração
+    LANGUAGE="$NEW_LANGUAGE"
+    save_config "$BASE_DIR" "$AGENT" "$ASK_AGENT_EVERY_TIME" "$LANGUAGE"
+
+    # Recarregar textos
+    load_language
+
+    echo ""
+    success "$(printf "$TXT_CONFIG_LANG_SUCCESS" "$LANG_NAME")"
+    echo ""
+    read -p "$TXT_PRESS_ENTER"
+}
+
 # Carregar configuração ou solicitar setup inicial
 if ! load_config; then
     setup_base_directory
@@ -253,25 +695,26 @@ warning() {
 # Função para exibir menu
 show_menu() {
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${BLUE}    🌳 Git Worktree Manager${NC}"
+    echo -e "${BLUE}    $TXT_TITLE${NC}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
-    echo "  1) Criar novo worktree"
-    echo "  2) Remover worktree existente"
-    echo "  3) Listar worktrees"
-    echo "  4) Configurar diretório de trabalho"
-    echo "  5) Configurar agente IA"
-    echo "  6) Sair"
+    echo "  1) $TXT_MENU_CREATE"
+    echo "  2) $TXT_MENU_REMOVE"
+    echo "  3) $TXT_MENU_LIST"
+    echo "  4) $TXT_MENU_CONFIG_DIR"
+    echo "  5) $TXT_MENU_CONFIG_AGENT"
+    echo "  6) $TXT_MENU_CHANGE_LANG"
+    echo "  7) $TXT_MENU_EXIT"
     echo ""
-    echo -e "${CYAN}📂 Diretório atual: $BASE_DIR${NC}"
+    echo -e "${CYAN}$TXT_CURRENT_DIR: $BASE_DIR${NC}"
 
     # Mostrar configuração do agente
     if [ -n "$AGENT" ]; then
         AGENT_NAME="${AGENT%%:*}"
         if [ "$ASK_AGENT_EVERY_TIME" = "true" ]; then
-            echo -e "${CYAN}🤖 Agente: Perguntar a cada worktree${NC}"
+            echo -e "${CYAN}$TXT_CURRENT_AGENT: $TXT_AGENT_ASK_EVERY${NC}"
         else
-            echo -e "${CYAN}🤖 Agente: $AGENT_NAME (fixo)${NC}"
+            echo -e "${CYAN}$TXT_CURRENT_AGENT: $(printf "$TXT_AGENT_FIXED" "$AGENT_NAME")${NC}"
         fi
     fi
 
@@ -657,7 +1100,7 @@ if [ -z "$OPERATION" ]; then
     # Modo interativo - mostrar menu
     while true; do
         show_menu
-        read -p "Escolha uma opção: " MENU_CHOICE
+        read -p "$TXT_CHOOSE_OPTION: " MENU_CHOICE
         echo ""
 
         case $MENU_CHOICE in
@@ -683,11 +1126,16 @@ if [ -z "$OPERATION" ]; then
                 clear
                 ;;
             6)
-                info "Saindo..."
+                setup_language_config
+                # Recarregar para menu com novo idioma
+                clear
+                ;;
+            7)
+                info "$TXT_EXITING"
                 exit 0
                 ;;
             *)
-                error_exit "Opção inválida"
+                error_exit "$TXT_INVALID_OPTION"
                 ;;
         esac
     done
