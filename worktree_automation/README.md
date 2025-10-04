@@ -64,10 +64,11 @@ O script espera a seguinte estrutura de pastas:
 **Exemplo após criar worktrees:**
 ```
 ~/workspace/projects/quaredx/
-├── roddi/                 # Projeto principal (main)
-├── user-auth/             # Worktree: feat/user-auth
-├── fix-login/             # Worktree: fix/login
-└── dashboard/             # Worktree: feat/dashboard
+├── roddi/                          # Projeto principal (main)
+├── feat_roddi_user-auth/           # Worktree: feat/user-auth
+├── fix_roddi_login/                # Worktree: fix/login
+├── release_roddi_v1.2.0/           # Worktree: release/v1.2.0
+└── refactor_roddi_database/        # Worktree: refactor/database
 ```
 
 ## 🚀 Instalação
@@ -154,9 +155,9 @@ wt
 ```
 
 O script irá:
-1. Listar todos os projetos Git disponíveis
-2. Solicitar nome do projeto
-3. Validar o projeto
+1. Listar todos os projetos Git disponíveis (menu numérico)
+2. Solicitar que escolha o número do projeto
+3. Validar o projeto selecionado
 4. Mostrar menu de opções (criar/remover/listar)
 
 **Exemplo:**
@@ -166,11 +167,16 @@ O script irá:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📁 Projetos disponíveis:
-  • habitofacil
-  • roddi
-  • itm3
 
-Digite o nome do projeto (ou 'q' para sair): roddi
+  1) habitofacil
+  2) roddi
+  3) itm3
+
+Escolha o número do projeto (ou 'q' para sair): 2
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    🌳 Git Worktree Manager
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ℹ️  Projeto: roddi
 ℹ️  Diretório: ~/workspace/projects/quaredx/roddi
@@ -215,6 +221,9 @@ wt roddi listar
 1. **Escolha o tipo:**
    - `1` para `feat` (feature)
    - `2` para `fix` (bugfix)
+   - `3` para `release`
+   - `4` para `refactor`
+   - `5` para `Outro (customizado)` - permite digitar qualquer prefixo
 
 2. **Digite o nome:**
    - Exemplo: `user authentication`
@@ -222,11 +231,26 @@ wt roddi listar
 
 3. **Confirme a criação**
 
-**Resultado:**
-- Branch criada: `feat/user-authentication` ou `fix/user-authentication`
-- Diretório: `~/workspace/projects/quaredx/user-authentication`
+**Resultado (exemplo com projeto "roddi" e tipo "feat"):**
+- Branch criada: `feat/user-authentication`
+- Diretório: `~/workspace/projects/quaredx/feat_roddi_user-authentication`
 - Navegação automática para o worktree
 - Claude Code aberto automaticamente (se instalado)
+
+**Padrão de nomenclatura:**
+```
+Diretório: {tipo}_{projeto}_{feature-name}
+Branch: {tipo}/{feature-name}
+```
+
+**Exemplos:**
+| Projeto | Tipo | Feature | Branch | Diretório |
+|---------|------|---------|--------|-----------|
+| roddi | feat | user-auth | `feat/user-auth` | `feat_roddi_user-auth/` |
+| roddi | fix | login-bug | `fix/login-bug` | `fix_roddi_login-bug/` |
+| roddi | release | v1.2.0 | `release/v1.2.0` | `release_roddi_v1.2.0/` |
+| roddi | refactor | database | `refactor/database` | `refactor_roddi_database/` |
+| roddi | chore | cleanup | `chore/cleanup` | `chore_roddi_cleanup/` |
 
 ### Remover Worktree
 

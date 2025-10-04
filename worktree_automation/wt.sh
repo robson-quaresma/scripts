@@ -66,53 +66,76 @@ list_available_projects() {
 # Função para solicitar nome do projeto interativamente
 get_project_name() {
     while true; do
-        clear
-        echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        echo -e "${BLUE}    🌳 Git Worktree Manager${NC}"
-        echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        echo ""
+        clear >&2
+        echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}" >&2
+        echo -e "${BLUE}    🌳 Git Worktree Manager${NC}" >&2
+        echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}" >&2
+        echo "" >&2
 
-        list_available_projects
+        # Coletar projetos Git em array
+        PROJECT_ARRAY=()
+        if [ -d "$BASE_DIR" ]; then
+            while IFS= read -r proj; do
+                if [ -d "$BASE_DIR/$proj/.git" ]; then
+                    PROJECT_ARRAY+=("$proj")
+                fi
+            done < <(ls -1 "$BASE_DIR" 2>/dev/null)
+        fi
 
-        read -p "$(echo -e ${CYAN}Digite o nome do projeto \(ou \'q\' para sair\):${NC} )" PROJECT_INPUT
+        # Verificar se há projetos
+        if [ ${#PROJECT_ARRAY[@]} -eq 0 ]; then
+            error_exit "Nenhum projeto Git encontrado em $BASE_DIR"
+        fi
+
+        # Mostrar menu de projetos
+        echo -e "${CYAN}📁 Projetos disponíveis:${NC}" >&2
+        echo "" >&2
+        INDEX=1
+        for proj in "${PROJECT_ARRAY[@]}"; do
+            echo "  $INDEX) $proj" >&2
+            ((INDEX++))
+        done
+        echo "" >&2
+
+        read -p "$(echo -e ${CYAN}Escolha o número do projeto \(ou \'q\' para sair\):${NC} )" CHOICE
 
         # Verificar se quer sair
-        if [[ "$PROJECT_INPUT" == "q" ]] || [[ "$PROJECT_INPUT" == "sair" ]] || [[ "$PROJECT_INPUT" == "exit" ]]; then
-            clear
-            info "Saindo..."
+        if [[ "$CHOICE" == "q" ]] || [[ "$CHOICE" == "sair" ]] || [[ "$CHOICE" == "exit" ]]; then
+            clear >&2
+            echo -e "${CYAN}ℹ️  Saindo...${NC}" >&2
             exit 0
         fi
 
         # Verificar se entrada está vazia
-        if [ -z "$PROJECT_INPUT" ]; then
-            echo ""
-            warning "Nome do projeto não pode ser vazio"
-            echo ""
+        if [ -z "$CHOICE" ]; then
+            echo "" >&2
+            echo -e "${YELLOW}⚠️  Escolha não pode ser vazia${NC}" >&2
+            echo "" >&2
             sleep 1
             continue
         fi
 
-        # Verificar se o diretório existe
-        if [ ! -d "$BASE_DIR/$PROJECT_INPUT" ]; then
-            echo ""
-            echo -e "${RED}❌ Projeto '$PROJECT_INPUT' não encontrado em $BASE_DIR${NC}"
-            echo ""
-            sleep 2
+        # Verificar se é número válido
+        if ! [[ "$CHOICE" =~ ^[0-9]+$ ]]; then
+            echo "" >&2
+            echo -e "${YELLOW}⚠️  Digite um número válido${NC}" >&2
+            echo "" >&2
+            sleep 1
             continue
         fi
 
-        # Verificar se é um repositório Git
-        if [ ! -d "$BASE_DIR/$PROJECT_INPUT/.git" ]; then
-            echo ""
-            echo -e "${RED}❌ '$PROJECT_INPUT' não é um repositório Git válido${NC}"
-            echo ""
-            sleep 2
+        # Verificar se está no range
+        if [ "$CHOICE" -lt 1 ] || [ "$CHOICE" -gt "${#PROJECT_ARRAY[@]}" ]; then
+            echo "" >&2
+            echo -e "${YELLOW}⚠️  Opção inválida. Escolha entre 1 e ${#PROJECT_ARRAY[@]}${NC}" >&2
+            echo "" >&2
+            sleep 1
             continue
         fi
 
-        # Projeto válido encontrado - retornar apenas o nome
-        clear
-        echo "$PROJECT_INPUT"
+        # Retornar projeto selecionado
+        SELECTED_PROJECT="${PROJECT_ARRAY[$((CHOICE-1))]}"
+        echo "$SELECTED_PROJECT"
         break
     done
 }
@@ -121,6 +144,18 @@ get_project_name() {
 if [ -z "$1" ]; then
     # Modo interativo - solicitar nome do projeto
     PROJECT_NAME=$(get_project_name)
+
+    # Verificar se PROJECT_NAME está vazio
+    if [ -z "$PROJECT_NAME" ]; then
+        error_exit "Nome do projeto não foi capturado corretamente"
+    fi
+
+    # Limpar tela e mostrar confirmação
+    clear
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BLUE}    🌳 Git Worktree Manager${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
 else
     PROJECT_NAME="$1"
     PROJECT_DIR="$BASE_DIR/$PROJECT_NAME"
@@ -145,16 +180,31 @@ if [ ! -d ".git" ]; then
     error_exit "Não é um repositório Git válido"
 fi
 
-# Verificar se está na branch main
+# Verificar branch atual
 CURRENT_BRANCH=$(git branch --show-current)
-if [ "$CURRENT_BRANCH" != "main" ]; then
-    warning "Você está na branch '$CURRENT_BRANCH'"
-    echo -e "${YELLOW}Trocando para branch 'main'...${NC}"
-    git checkout main || error_exit "Não foi possível trocar para branch main"
-    echo ""
-fi
 
-success "Na branch main ✓"
+# Verificar se está em branch main ou master (branches principais)
+if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
+    success "Na branch $CURRENT_BRANCH ✓"
+else
+    warning "Você está na branch '$CURRENT_BRANCH' (não é main/master)"
+    echo ""
+    read -p "$(echo -e ${YELLOW}Deseja trocar para branch principal? \(y/n\):${NC} )" CHANGE_BRANCH
+
+    if [[ "$CHANGE_BRANCH" =~ ^[Yy]$ ]]; then
+        # Tentar main primeiro, depois master
+        if git show-ref --verify --quiet refs/heads/main; then
+            git checkout main || warning "Não foi possível trocar para main"
+        elif git show-ref --verify --quiet refs/heads/master; then
+            git checkout master || warning "Não foi possível trocar para master"
+        else
+            warning "Nenhuma branch principal (main/master) encontrada"
+        fi
+        CURRENT_BRANCH=$(git branch --show-current)
+    fi
+
+    info "Continuando na branch: $CURRENT_BRANCH"
+fi
 echo ""
 
 # Função para listar worktrees
@@ -176,15 +226,40 @@ create_worktree() {
     echo -e "${CYAN}Tipo de branch:${NC}"
     echo "  1) feat (feature)"
     echo "  2) fix (bugfix)"
+    echo "  3) release"
+    echo "  4) refactor"
+    echo "  5) Outro (customizado)"
     echo ""
-    read -p "Escolha (1 ou 2): " TYPE_CHOICE
+    read -p "Escolha (1-5): " TYPE_CHOICE
 
     case $TYPE_CHOICE in
         1)
             BRANCH_TYPE="feat"
+            TYPE_LABEL="feature"
             ;;
         2)
             BRANCH_TYPE="fix"
+            TYPE_LABEL="fix"
+            ;;
+        3)
+            BRANCH_TYPE="release"
+            TYPE_LABEL="release"
+            ;;
+        4)
+            BRANCH_TYPE="refactor"
+            TYPE_LABEL="refactor"
+            ;;
+        5)
+            read -p "$(echo -e ${CYAN}Digite o prefixo customizado:${NC} )" BRANCH_TYPE
+            if [ -z "$BRANCH_TYPE" ]; then
+                error_exit "Prefixo não pode ser vazio"
+            fi
+            # Validar prefixo (apenas letras minúsculas)
+            BRANCH_TYPE=$(echo "$BRANCH_TYPE" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z]//g')
+            if [ -z "$BRANCH_TYPE" ]; then
+                error_exit "Prefixo inválido"
+            fi
+            TYPE_LABEL="$BRANCH_TYPE"
             ;;
         *)
             error_exit "Opção inválida"
@@ -193,8 +268,8 @@ create_worktree() {
 
     echo ""
 
-    # Solicitar nome da feature
-    read -p "$(echo -e ${CYAN}Nome da feature/fix:${NC} )" FEATURE_NAME
+    # Solicitar nome (dinâmico baseado no tipo)
+    read -p "$(echo -e ${CYAN}Nome do $TYPE_LABEL:${NC} )" FEATURE_NAME
 
     if [ -z "$FEATURE_NAME" ]; then
         error_exit "Nome não pode ser vazio"
@@ -204,7 +279,7 @@ create_worktree() {
     FEATURE_NAME=$(echo "$FEATURE_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g' | sed 's/[^a-z0-9-]//g')
 
     BRANCH_NAME="${BRANCH_TYPE}/${FEATURE_NAME}"
-    WORKTREE_DIR="../${FEATURE_NAME}"
+    WORKTREE_DIR="../${BRANCH_TYPE}_${PROJECT_NAME}_${FEATURE_NAME}"
 
     echo ""
     info "Branch: $BRANCH_NAME"
