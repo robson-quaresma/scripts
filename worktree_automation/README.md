@@ -24,7 +24,8 @@ O **Git Worktree Manager** (`wt`) é uma ferramenta que automatiza a criação e
 ✅ **Listagem**: Visualiza todos worktrees ativos
 ✅ **Validação Automática**: Garante que está na branch `main` antes de operar
 ✅ **Nomenclatura Inteligente**: Sanitiza nomes automaticamente
-✅ **Integração Claude**: Abre Claude Code automaticamente após criar worktree
+✅ **Configuração Flexível**: Configure diretório de trabalho e agente IA
+✅ **Suporte Multi-Agente**: Claude, Cursor, Gemini, Copilot, Windsurf e mais
 ✅ **Interface Colorida**: Output visual e intuitivo
 
 ## 📦 Pré-requisitos
@@ -206,9 +207,11 @@ Escolha o número do projeto (ou 'q' para sair): 2
   2) Remover worktree existente
   3) Listar worktrees
   4) Configurar diretório de trabalho
-  5) Sair
+  5) Configurar agente IA
+  6) Sair
 
 📂 Diretório atual: ~/projects
+🤖 Agente: claude (fixo)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -365,6 +368,119 @@ cat ~/.wt_config
 # Resetar configuração (será solicitado novo diretório na próxima execução)
 rm ~/.wt_config
 ```
+
+## 🤖 Configuração do Agente IA
+
+### Agentes Suportados
+
+O script suporta abertura automática de diversos agentes IA após criar um worktree:
+
+- **Claude Code** (`claude`)
+- **Cursor** (`cursor`)
+- **Gemini** (`gemini`)
+- **GitHub Copilot** (`code`)
+- **Windsurf** (`windsurf`)
+- **Nenhum** (não abrir agente automaticamente)
+- **Outro** (customizado - informe o comando)
+
+### Primeira Configuração
+
+Na primeira execução (após configurar o diretório de trabalho), você será solicitado a configurar o agente IA:
+
+```bash
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    🤖 Configurar Agente IA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Selecione o agente IA que você utiliza:
+
+  1) Claude Code
+  2) Cursor
+  3) Gemini
+  4) GitHub Copilot (codex)
+  5) Windsurf
+  6) Nenhum (não abrir agente automaticamente)
+  7) Outro (customizado)
+
+Escolha (1-7): 1
+
+Como deseja usar o agente?
+
+  1) Sempre usar claude (configuração fixa)
+  2) Perguntar qual agente usar a cada worktree criado
+
+Escolha (1-2): 1
+
+✅ Agente configurado com sucesso!
+
+ℹ️  Modo: Sempre usar claude
+```
+
+### Modos de Uso
+
+#### Modo Fixo (Padrão)
+
+O agente configurado será aberto automaticamente sempre que criar um worktree.
+
+**Vantagem:** Mais rápido, não precisa escolher toda vez.
+
+#### Modo Dinâmico (Perguntar a cada vez)
+
+Ao criar um worktree, você será perguntado qual agente abrir.
+
+**Vantagem:** Flexibilidade para alternar entre agentes conforme necessidade.
+
+### Reconfigurar Agente
+
+Para alterar o agente ou modo a qualquer momento:
+
+1. Execute `wt` (sem argumentos)
+2. Escolha opção `5) Configurar agente IA`
+3. Selecione o novo agente
+4. Escolha o modo (fixo ou perguntar)
+
+### Exemplo de Uso
+
+**Modo Fixo:**
+```bash
+$ wt myapp criar
+# ... criação do worktree ...
+ℹ️  Iniciando claude...
+# Claude abre automaticamente ✅
+```
+
+**Modo Dinâmico:**
+```bash
+$ wt myapp criar
+# ... criação do worktree ...
+
+Qual agente deseja abrir?
+
+  1) Claude Code
+  2) Cursor
+  3) Gemini
+  4) GitHub Copilot (code)
+  5) Windsurf
+  6) Nenhum
+  7) Outro
+
+Escolha (1-7): 2
+
+ℹ️  Iniciando cursor...
+# Cursor abre ✅
+```
+
+### Arquivo de Configuração
+
+A configuração do agente é salva em `~/.wt_config`:
+
+```bash
+BASE_DIR="/Users/{user}/projects"
+AGENT="claude:claude"
+ASK_AGENT_EVERY_TIME="false"
+```
+
+**Formato:** `AGENT="nome:comando"`
 
 ## 🔧 Troubleshooting
 

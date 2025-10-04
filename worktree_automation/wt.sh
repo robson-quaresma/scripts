@@ -31,8 +31,24 @@ load_config() {
 # Função para salvar configuração
 save_config() {
     local dir="$1"
-    echo "BASE_DIR=\"$dir\"" > "$CONFIG_FILE"
+    local agent="${2:-$AGENT}"
+    local ask_every_time="${3:-$ASK_AGENT_EVERY_TIME}"
+
+    cat > "$CONFIG_FILE" << EOF
+BASE_DIR="$dir"
+AGENT="$agent"
+ASK_AGENT_EVERY_TIME="$ask_every_time"
+EOF
     success "Configuração salva em $CONFIG_FILE"
+}
+
+# Função para salvar apenas agente
+save_agent_config() {
+    local agent="$1"
+    local ask_every_time="$2"
+
+    # Manter BASE_DIR atual
+    save_config "$BASE_DIR" "$agent" "$ask_every_time"
 }
 
 # Função para configurar diretório base
@@ -96,12 +112,121 @@ setup_base_directory() {
     read -p "Pressione Enter para continuar..."
 }
 
+# Função para configurar agente IA
+setup_agent_config() {
+    clear
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BLUE}    🤖 Configurar Agente IA${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+
+    if [ -n "$AGENT" ]; then
+        info "Agente atual: $AGENT"
+        if [ "$ASK_AGENT_EVERY_TIME" = "true" ]; then
+            info "Modo: Perguntar a cada worktree"
+        else
+            info "Modo: Sempre usar $AGENT"
+        fi
+        echo ""
+    fi
+
+    echo -e "${CYAN}Selecione o agente IA que você utiliza:${NC}"
+    echo ""
+    echo "  1) Claude Code"
+    echo "  2) Cursor"
+    echo "  3) Gemini"
+    echo "  4) GitHub Copilot (codex)"
+    echo "  5) Windsurf"
+    echo "  6) Nenhum (não abrir agente automaticamente)"
+    echo "  7) Outro (customizado)"
+    echo ""
+    read -p "Escolha (1-7): " AGENT_CHOICE
+
+    case $AGENT_CHOICE in
+        1)
+            SELECTED_AGENT="claude"
+            AGENT_CMD="claude"
+            ;;
+        2)
+            SELECTED_AGENT="cursor"
+            AGENT_CMD="cursor"
+            ;;
+        3)
+            SELECTED_AGENT="gemini"
+            AGENT_CMD="gemini"
+            ;;
+        4)
+            SELECTED_AGENT="copilot"
+            AGENT_CMD="code"
+            ;;
+        5)
+            SELECTED_AGENT="windsurf"
+            AGENT_CMD="windsurf"
+            ;;
+        6)
+            SELECTED_AGENT="none"
+            AGENT_CMD="none"
+            ;;
+        7)
+            read -p "$(echo -e ${CYAN}Nome do agente:${NC} )" SELECTED_AGENT
+            read -p "$(echo -e ${CYAN}Comando para abrir:${NC} )" AGENT_CMD
+            if [ -z "$SELECTED_AGENT" ] || [ -z "$AGENT_CMD" ]; then
+                error_exit "Nome e comando não podem ser vazios"
+            fi
+            ;;
+        *)
+            error_exit "Opção inválida"
+            ;;
+    esac
+
+    echo ""
+    echo -e "${CYAN}Como deseja usar o agente?${NC}"
+    echo ""
+    echo "  1) Sempre usar $SELECTED_AGENT (configuração fixa)"
+    echo "  2) Perguntar qual agente usar a cada worktree criado"
+    echo ""
+    read -p "Escolha (1-2): " MODE_CHOICE
+
+    case $MODE_CHOICE in
+        1)
+            ASK_EVERY_TIME="false"
+            ;;
+        2)
+            ASK_EVERY_TIME="true"
+            ;;
+        *)
+            error_exit "Opção inválida"
+            ;;
+    esac
+
+    # Salvar configuração
+    save_agent_config "$SELECTED_AGENT:$AGENT_CMD" "$ASK_EVERY_TIME"
+    AGENT="$SELECTED_AGENT:$AGENT_CMD"
+    ASK_AGENT_EVERY_TIME="$ASK_EVERY_TIME"
+
+    echo ""
+    success "Agente configurado com sucesso!"
+    echo ""
+    if [ "$ASK_EVERY_TIME" = "true" ]; then
+        info "Modo: Você será perguntado qual agente usar a cada worktree"
+    else
+        info "Modo: Sempre usar $SELECTED_AGENT"
+    fi
+    echo ""
+    read -p "Pressione Enter para continuar..."
+}
+
 # Carregar configuração ou solicitar setup inicial
 if ! load_config; then
     setup_base_directory
     if [ -z "$BASE_DIR" ]; then
         error_exit "Configuração inicial necessária"
     fi
+fi
+
+# Configurar agente se não estiver configurado
+if [ -z "$AGENT" ]; then
+    setup_agent_config
 fi
 
 # Função para exibir erro e sair
@@ -135,9 +260,21 @@ show_menu() {
     echo "  2) Remover worktree existente"
     echo "  3) Listar worktrees"
     echo "  4) Configurar diretório de trabalho"
-    echo "  5) Sair"
+    echo "  5) Configurar agente IA"
+    echo "  6) Sair"
     echo ""
     echo -e "${CYAN}📂 Diretório atual: $BASE_DIR${NC}"
+
+    # Mostrar configuração do agente
+    if [ -n "$AGENT" ]; then
+        AGENT_NAME="${AGENT%%:*}"
+        if [ "$ASK_AGENT_EVERY_TIME" = "true" ]; then
+            echo -e "${CYAN}🤖 Agente: Perguntar a cada worktree${NC}"
+        else
+            echo -e "${CYAN}🤖 Agente: $AGENT_NAME (fixo)${NC}"
+        fi
+    fi
+
     echo ""
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 }
@@ -399,13 +536,53 @@ create_worktree() {
         success "Diretório atual: $(pwd)"
         echo ""
 
-        # Verificar se claude está disponível
-        if command -v claude &> /dev/null; then
-            info "Iniciando Claude Code..."
+        # Abrir agente IA configurado
+        if [ "$ASK_AGENT_EVERY_TIME" = "true" ]; then
+            # Perguntar qual agente usar
+            echo -e "${CYAN}Qual agente deseja abrir?${NC}"
             echo ""
-            claude
+            echo "  1) Claude Code"
+            echo "  2) Cursor"
+            echo "  3) Gemini"
+            echo "  4) GitHub Copilot (code)"
+            echo "  5) Windsurf"
+            echo "  6) Nenhum"
+            echo "  7) Outro"
+            echo ""
+            read -p "Escolha (1-7): " AGENT_NOW_CHOICE
+
+            case $AGENT_NOW_CHOICE in
+                1) AGENT_CMD_NOW="claude" ;;
+                2) AGENT_CMD_NOW="cursor" ;;
+                3) AGENT_CMD_NOW="gemini" ;;
+                4) AGENT_CMD_NOW="code" ;;
+                5) AGENT_CMD_NOW="windsurf" ;;
+                6) AGENT_CMD_NOW="none" ;;
+                7)
+                    read -p "$(echo -e ${CYAN}Comando do agente:${NC} )" AGENT_CMD_NOW
+                    ;;
+                *)
+                    warning "Opção inválida, pulando abertura do agente"
+                    AGENT_CMD_NOW="none"
+                    ;;
+            esac
         else
-            warning "Claude Code não encontrado. Inicie manualmente se necessário."
+            # Usar agente configurado
+            AGENT_CMD_NOW="${AGENT#*:}"  # Extrai comando após ":"
+        fi
+
+        # Executar comando do agente (se não for "none")
+        if [ "$AGENT_CMD_NOW" != "none" ]; then
+            if command -v "$AGENT_CMD_NOW" &> /dev/null; then
+                AGENT_NAME="${AGENT%%:*}"  # Extrai nome antes de ":"
+                info "Iniciando $AGENT_NAME..."
+                echo ""
+                $AGENT_CMD_NOW
+            else
+                warning "Comando '$AGENT_CMD_NOW' não encontrado. Inicie manualmente se necessário."
+            fi
+        else
+            info "Nenhum agente será aberto automaticamente"
         fi
     else
         error_exit "Falha ao criar worktree. Verifique se a branch já existe."
@@ -501,6 +678,11 @@ if [ -z "$OPERATION" ]; then
                 clear
                 ;;
             5)
+                setup_agent_config
+                # Recarregar para menu com novo agente
+                clear
+                ;;
+            6)
                 info "Saindo..."
                 exit 0
                 ;;
