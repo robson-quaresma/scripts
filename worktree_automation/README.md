@@ -38,37 +38,36 @@ O **Git Worktree Manager** (`wt`) é uma ferramenta que automatiza a criação e
 - Bash 4.0+
 - zsh ou bash (shell)
 
-### Estrutura de Diretórios Obrigatória
+### Configuração Inicial
 
-O script espera a seguinte estrutura de pastas:
+Na primeira execução, o script solicitará que você configure o **diretório de trabalho** onde seus projetos Git estão localizados.
+
+**Estrutura recomendada:**
 
 ```
-~/workspace/projects/quaredx/
-├── projeto1/              # Repositório Git (branch main)
+~/projects/                         # Seu diretório de projetos
+├── projeto1/                       # Repositório Git (branch main)
 │   └── .git/
-├── projeto2/              # Repositório Git (branch main)
+├── projeto2/                       # Repositório Git (branch main)
 │   └── .git/
-└── scripts/
-    └── worktree_automation/
-        ├── wt.sh          # Script principal
-        ├── install.sh     # Instalador
-        ├── uninstall.sh   # Desinstalador
-        └── README.md      # Este arquivo
+└── projeto3/                       # Repositório Git (branch main)
+    └── .git/
 ```
 
 **IMPORTANTE:**
-- A pasta base **DEVE** ser: `~/workspace/projects/quaredx/`
+- O diretório pode ser qualquer pasta que contenha seus projetos Git
 - Cada projeto deve ter um repositório Git válido
 - Os worktrees serão criados no mesmo nível dos projetos
+- A configuração é salva em `~/.wt_config` e pode ser alterada a qualquer momento
 
 **Exemplo após criar worktrees:**
 ```
-~/workspace/projects/quaredx/
-├── roddi/                          # Projeto principal (main)
-├── feat_roddi_user-auth/           # Worktree: feat/user-auth
-├── fix_roddi_login/                # Worktree: fix/login
-├── release_roddi_v1.2.0/           # Worktree: release/v1.2.0
-└── refactor_roddi_database/        # Worktree: refactor/database
+~/projects/
+├── myapp/                          # Projeto principal (main)
+├── feat_myapp_user-auth/           # Worktree: feat/user-auth
+├── fix_myapp_login/                # Worktree: fix/login
+├── release_myapp_v1.2.0/           # Worktree: release/v1.2.0
+└── refactor_myapp_database/        # Worktree: refactor/database
 ```
 
 ## 🚀 Instalação
@@ -77,7 +76,7 @@ O script espera a seguinte estrutura de pastas:
 
 1. **Clone ou navegue até o diretório do script:**
    ```bash
-   cd ~/workspace/projects/quaredx/scripts/worktree_automation
+   cd /path/to/worktree_automation
    ```
 
 2. **Execute o instalador:**
@@ -98,6 +97,16 @@ O script espera a seguinte estrutura de pastas:
    **Opção B - Abrir novo terminal:**
    ```bash
    # Simplesmente abra uma nova janela/aba do terminal
+   ```
+
+4. **Configure o diretório de trabalho:**
+
+   Na primeira execução do comando `wt`, você será solicitado a configurar o diretório onde seus projetos Git estão localizados.
+
+   ```bash
+   wt
+   # Digite o caminho completo (use Tab para autocomplete)
+   # Exemplo: ~/projects  ou  ~/workspace/repos
    ```
 
 ### O que o Instalador Faz
@@ -123,8 +132,8 @@ Se preferir instalar manualmente:
 
 2. **Criar link simbólico:**
    ```bash
-   ln -s ~/workspace/projects/quaredx/scripts/worktree_automation/wt.sh ~/bin/wt
-   chmod +x ~/workspace/projects/quaredx/scripts/worktree_automation/wt.sh
+   ln -s /path/to/worktree_automation/wt.sh ~/bin/wt
+   chmod +x /path/to/worktree_automation/wt.sh
    ```
 
 3. **Adicionar ao shell config (.zshrc ou .bashrc):**
@@ -136,6 +145,12 @@ Se preferir instalar manualmente:
 4. **Recarregar shell:**
    ```bash
    source ~/.zshrc
+   ```
+
+5. **Configure o diretório de trabalho:**
+   ```bash
+   wt
+   # Na primeira execução, configure seu diretório de projetos
    ```
 
 ## 💻 Uso
@@ -168,9 +183,9 @@ O script irá:
 
 📁 Projetos disponíveis:
 
-  1) habitofacil
-  2) roddi
-  3) itm3
+  1) project-a
+  2) myapp
+  3) website
 
 Escolha o número do projeto (ou 'q' para sair): 2
 
@@ -178,8 +193,8 @@ Escolha o número do projeto (ou 'q' para sair): 2
     🌳 Git Worktree Manager
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-ℹ️  Projeto: roddi
-ℹ️  Diretório: ~/workspace/projects/quaredx/roddi
+ℹ️  Projeto: myapp
+ℹ️  Diretório: ~/projects/myapp
 
 ✅ Na branch main ✓
 
@@ -190,7 +205,12 @@ Escolha o número do projeto (ou 'q' para sair): 2
   1) Criar novo worktree
   2) Remover worktree existente
   3) Listar worktrees
-  4) Sair
+  4) Configurar diretório de trabalho
+  5) Sair
+
+📂 Diretório atual: ~/projects
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Escolha uma opção: _
 ```
@@ -198,7 +218,7 @@ Escolha uma opção: _
 #### 2️⃣ Modo Interativo com Projeto
 
 ```bash
-wt roddi
+wt myapp
 ```
 
 Especifica o projeto e mostra o menu de operações.
@@ -207,13 +227,13 @@ Especifica o projeto e mostra o menu de operações.
 
 ```bash
 # Criar worktree
-wt roddi criar
+wt myapp criar
 
 # Remover worktree
-wt roddi remover
+wt myapp remover
 
 # Listar worktrees
-wt roddi listar
+wt myapp listar
 ```
 
 ### Criar Worktree
@@ -231,9 +251,9 @@ wt roddi listar
 
 3. **Confirme a criação**
 
-**Resultado (exemplo com projeto "roddi" e tipo "feat"):**
+**Resultado (exemplo com projeto "myapp" e tipo "feat"):**
 - Branch criada: `feat/user-authentication`
-- Diretório: `~/workspace/projects/quaredx/feat_roddi_user-authentication`
+- Diretório: `~/projects/feat_myapp_user-authentication`
 - Navegação automática para o worktree
 - Claude Code aberto automaticamente (se instalado)
 
@@ -246,11 +266,11 @@ Branch: {tipo}/{feature-name}
 **Exemplos:**
 | Projeto | Tipo | Feature | Branch | Diretório |
 |---------|------|---------|--------|-----------|
-| roddi | feat | user-auth | `feat/user-auth` | `feat_roddi_user-auth/` |
-| roddi | fix | login-bug | `fix/login-bug` | `fix_roddi_login-bug/` |
-| roddi | release | v1.2.0 | `release/v1.2.0` | `release_roddi_v1.2.0/` |
-| roddi | refactor | database | `refactor/database` | `refactor_roddi_database/` |
-| roddi | chore | cleanup | `chore/cleanup` | `chore_roddi_cleanup/` |
+| myapp | feat | user-auth | `feat/user-auth` | `feat_myapp_user-auth/` |
+| myapp | fix | login-bug | `fix/login-bug` | `fix_myapp_login-bug/` |
+| myapp | release | v1.2.0 | `release/v1.2.0` | `release_myapp_v1.2.0/` |
+| myapp | refactor | database | `refactor/database` | `refactor_myapp_database/` |
+| myapp | chore | cleanup | `chore/cleanup` | `chore_myapp_cleanup/` |
 
 ### Remover Worktree
 
@@ -301,6 +321,51 @@ rm ~/bin/wt
 source ~/.zshrc
 ```
 
+## ⚙️ Configuração do Diretório de Trabalho
+
+### Primeira Configuração
+
+Na primeira execução do comando `wt`, você será solicitado a configurar o diretório base onde seus projetos Git estão localizados:
+
+```bash
+$ wt
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    ⚙️  Configurar Diretório de Trabalho
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Digite o caminho do diretório onde seus projetos Git estão localizados:
+(Use Tab para autocomplete de caminhos)
+
+Diretório: ~/projects
+
+✅ Configuração salva em ~/.wt_config
+✅ Diretório configurado com sucesso!
+
+ℹ️  Projetos Git encontrados: 3
+```
+
+### Reconfigurar Diretório
+
+Para alterar o diretório de trabalho a qualquer momento:
+
+1. Execute `wt` (sem argumentos)
+2. Escolha opção `4) Configurar diretório de trabalho`
+3. Digite o novo caminho (use Tab para autocomplete)
+4. Confirme a mudança
+
+### Arquivo de Configuração
+
+A configuração é salva em `~/.wt_config`:
+
+```bash
+# Ver configuração atual
+cat ~/.wt_config
+
+# Resetar configuração (será solicitado novo diretório na próxima execução)
+rm ~/.wt_config
+```
+
 ## 🔧 Troubleshooting
 
 ### Comando `wt` não encontrado
@@ -317,11 +382,11 @@ source ~/.zshrc  # ou source ~/.bashrc
 
 ### Projeto não encontrado
 
-**Causa:** Estrutura de diretórios incorreta
+**Causa:** Diretório de trabalho não configurado ou projeto não existe
 
 **Solução:**
-1. Verificar se o projeto está em: `~/workspace/projects/quaredx/`
-2. Verificar se o diretório contém `.git/`
+1. Configurar/reconfigurar o diretório de trabalho: `wt` → opção 4
+2. Verificar se o projeto contém `.git/`
 3. Executar `wt` sem argumentos para ver projetos disponíveis
 
 ### Branch main não encontrada

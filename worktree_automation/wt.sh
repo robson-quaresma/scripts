@@ -12,8 +12,97 @@ BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-# Diretório base dos projetos
-BASE_DIR=~/workspace/projects/quaredx
+# Arquivo de configuração
+CONFIG_FILE="$HOME/.wt_config"
+
+# Função para carregar configuração
+load_config() {
+    if [ -f "$CONFIG_FILE" ]; then
+        source "$CONFIG_FILE"
+        if [ -z "$BASE_DIR" ]; then
+            return 1
+        fi
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Função para salvar configuração
+save_config() {
+    local dir="$1"
+    echo "BASE_DIR=\"$dir\"" > "$CONFIG_FILE"
+    success "Configuração salva em $CONFIG_FILE"
+}
+
+# Função para configurar diretório base
+setup_base_directory() {
+    clear
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BLUE}    ⚙️  Configurar Diretório de Trabalho${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+
+    if [ -n "$BASE_DIR" ]; then
+        info "Diretório atual: $BASE_DIR"
+        echo ""
+    fi
+
+    echo -e "${CYAN}Digite o caminho do diretório onde seus projetos Git estão localizados:${NC}"
+    echo -e "${YELLOW}(Use Tab para autocomplete de caminhos)${NC}"
+    echo ""
+
+    # Habilitar autocomplete de paths
+    read -e -p "Diretório: " NEW_BASE_DIR
+
+    # Expandir ~ para home
+    NEW_BASE_DIR="${NEW_BASE_DIR/#\~/$HOME}"
+
+    # Verificar se está vazio
+    if [ -z "$NEW_BASE_DIR" ]; then
+        warning "Diretório não pode ser vazio"
+        sleep 2
+        return 1
+    fi
+
+    # Verificar se diretório existe
+    if [ ! -d "$NEW_BASE_DIR" ]; then
+        error_exit "Diretório '$NEW_BASE_DIR' não existe"
+    fi
+
+    # Verificar se há pelo menos um projeto Git
+    GIT_COUNT=$(find "$NEW_BASE_DIR" -maxdepth 2 -name ".git" -type d 2>/dev/null | wc -l)
+    if [ "$GIT_COUNT" -eq 0 ]; then
+        echo ""
+        warning "Nenhum projeto Git encontrado em '$NEW_BASE_DIR'"
+        echo ""
+        read -p "$(echo -e ${YELLOW}Deseja usar este diretório mesmo assim? \(y/n\):${NC} )" CONFIRM
+        if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
+            warning "Configuração cancelada"
+            sleep 1
+            return 1
+        fi
+    fi
+
+    # Salvar configuração
+    save_config "$NEW_BASE_DIR"
+    BASE_DIR="$NEW_BASE_DIR"
+
+    echo ""
+    success "Diretório configurado com sucesso!"
+    echo ""
+    info "Projetos Git encontrados: $GIT_COUNT"
+    echo ""
+    read -p "Pressione Enter para continuar..."
+}
+
+# Carregar configuração ou solicitar setup inicial
+if ! load_config; then
+    setup_base_directory
+    if [ -z "$BASE_DIR" ]; then
+        error_exit "Configuração inicial necessária"
+    fi
+fi
 
 # Função para exibir erro e sair
 error_exit() {
@@ -45,7 +134,10 @@ show_menu() {
     echo "  1) Criar novo worktree"
     echo "  2) Remover worktree existente"
     echo "  3) Listar worktrees"
-    echo "  4) Sair"
+    echo "  4) Configurar diretório de trabalho"
+    echo "  5) Sair"
+    echo ""
+    echo -e "${CYAN}📂 Diretório atual: $BASE_DIR${NC}"
     echo ""
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 }
@@ -404,6 +496,11 @@ if [ -z "$OPERATION" ]; then
                 list_worktrees
                 ;;
             4)
+                setup_base_directory
+                # Recarregar para menu com novo diretório
+                clear
+                ;;
+            5)
                 info "Saindo..."
                 exit 0
                 ;;
